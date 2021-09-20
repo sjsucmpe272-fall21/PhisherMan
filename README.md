@@ -10,7 +10,7 @@ A Chrome browser extension that leverages machine learning to provide active phi
 
 Phishing campaigns are growing increasingly prevalent. A major form of action being taken to counteract these phishing campaigns are "education," in which companies dedicate time and resources to teach employees how to recognize a phishing attempt. In addition, active email filters are commonly used that filter against phishing as well spam and as maintaining DLP.
 
-However, even the most educated human can be fooled, and phishing often occurs outside of email. Most prominently, a common form of phishing are fake login pages wherein an attacker hosts a login page that is similar or identical to a legitimate site in effort to steal login credentials. For example, an attacker can host a fake Facebook login page at a domain like "facebook.help-supp0rtt.info" that harvests any credentials that a victim user attempts to enter.
+However, these are insufficient as even the most educated human can be fooled, and phishing often occurs outside of email. Most prominently, a common form of phishing are fake login pages wherein an attacker hosts a login page that is similar or identical to a legitimate site in effort to steal login credentials. For example, an attacker can host a fake Facebook login page at a domain like "facebook.help-supp0rtt.info" that harvests any credentials that a victim user attempts to enter.
 
 This project addresses this problem by providing a Chrome browser extension that scans webpages for phishing by providing navigated webpages into a trained phishing detection model and alerts the user if it detects a webpage to be a phishing page.
 
