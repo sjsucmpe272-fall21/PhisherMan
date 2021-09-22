@@ -68,3 +68,24 @@ Any internet user interested in art.
 ## Dataset links
 1. https://www.kaggle.com/c/gan-getting-started/data
 2. Data from wikiart.org https://academictorrents.com/details/1d154cde2fab9ec8039becd03d9bb877614d351b
+
+# Proposal 3 - Music Genre Classification
+
+## Introduction
+A portal that lets users upload a music sample file and predicts its genre
+
+## Abstract
+
+Music is loved by all but everyone's choice is different. Some prefer classical or some like heavy beats like rock. The idea is to built a python machine learning model to automatically predict the genre of the music sample uploaded. The sample's time duration and frequencies can be the parameters used in identifing for the classification. 
+
+For this we used the data set having similar frequiencies and audio tracks with similar size. GTZAN is the reccomended dataset for this model training which was complied for the use of genre classification.
+
+## Approach
+The application will work as such:
+1. GTZAN dataset is trained by using K-Nearest Neighbours and clustering.
+2. The trained model is used to predict the genre of uploaded file
+3. The website can be created through a Flask app
+4. Reccomendation of songs can be also provided 
+
+## Dataset links
+http://marsyas.info/downloads/datasets.html
