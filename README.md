@@ -1,6 +1,6 @@
-# Team-Project-31
+# PhisherMan
 
-## Proposal 1 - Chrome Extension for Active Phishing Detection
+## Chrome Extension for Active Phishing Detection
 
 ### Introduction
 
@@ -40,54 +40,3 @@ Potential datasets to use:
 - https://github.com/GregaVrbancic/Phishing-Dataset
 - https://gregavrbancic.github.io/Phishing-Dataset/
 - Many more...
-
-
-
-## Proposal 2 - Fake Art Digital Museum
-
-### Introduction
-
-A website that generates new artwork for a user to peruse in the style of various popular painters.
-
-### Abstract
-
-During the covid lockdowns, we lost the ability to do indoor activities outside our home. Various technologies blossomed during these restrictions to help connect people or amuse them while they were at home. Museums were affected by lockdowns and started holding virtual exhibits so members could experience the art while at home. Even now people have to self quarantine for various reasons and use the internet to alleviate some of their boredom.
-
-Immersive art exhibits have become more popular in recent years. For example teamLab have appeared frequently on social media. There are immersive exhibits like the Van Gogh experience in San Francisco. To bring this to users, we will use a generative model to make novel artwork in the style of various artists through a website.
-
-### Approach
-The application will work as such:
-1. a GANs model is trained on various painters to be able to product artworks of different styles.
-2. The trained model is used to generate artworks for a website
-3. The website can be created through a Flask app
-4. Everytime a user access the app a new set of paintings are shown
-
-
-### Persona
-
-Any internet user interested in art.
-
-### Dataset links
-1. https://www.kaggle.com/c/gan-getting-started/data
-2. Data from wikiart.org https://academictorrents.com/details/1d154cde2fab9ec8039becd03d9bb877614d351b
-
-## Proposal 3 - Music Genre Classification
-
-### Introduction
-A portal that lets users upload a music sample file and predicts its genre
-
-### Abstract
-
-Music is loved by all but everyone's choice is different. Some prefer classical or some like heavy beats like rock. The idea is to built a python machine learning model to automatically predict the genre of the music sample uploaded. The sample's time duration and frequencies can be the parameters used in identifing for the classification.
-
-For this we used the data set having similar frequiencies and audio tracks with similar size. GTZAN is the reccomended dataset for this model training which was complied for the use of genre classification.
-
-### Approach
-The application will work as such:
-1. GTZAN dataset is trained by using K-Nearest Neighbours and clustering.
-2. The trained model is used to predict the genre of uploaded file
-3. The website can be created through a Flask app
-4. Reccomendation of songs can be also provided
-
-### Dataset links
-http://marsyas.info/downloads/datasets.html
