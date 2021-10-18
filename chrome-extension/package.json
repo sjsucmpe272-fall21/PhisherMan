@@ -4,7 +4,9 @@
     "description": "Active phising detection",
     "main": "src/ts/background.ts",
     "scripts": {
-        "build": "npm run build-pug && webpack --config webpack.config.js --mode production --no-devtool",
+        "build": "npm run build-pug && npm run build-prod",
+        "build-prod": "webpack --config webpack.config.js --mode production --no-devtool",
+        "build-dev-watch": "webpack --config webpack.config.js --watch",
         "build-dev": "webpack --config webpack.config.js",
         "build-pug": "pug src/pug/index.pug src/pug/options.pug --out dist && webpack --config webpack.config.css.js",
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -30,5 +32,8 @@
         "webpack": "^5.58.2",
         "webpack-cli": "^4.9.0",
         "webpack-fix-style-only-entries": "^0.6.1"
+    },
+    "devDependencies": {
+        "@types/chrome": "^0.0.159"
     }
 }
