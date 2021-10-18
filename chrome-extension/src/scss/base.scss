@@ -1,0 +1,10 @@
+@import "~bootstrap/scss/bootstrap";
+
+html, body, main {
+    @extend .h-100;
+    @extend .w-100;
+}
+html, body {
+    padding: 0;
+    margin: 0;
+}
