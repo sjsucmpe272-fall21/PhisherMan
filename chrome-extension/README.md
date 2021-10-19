@@ -10,12 +10,11 @@ Node Package Manager (npm)
 
 ## Installation
 
-1. Build the code:
+1. Build the code (outputs to directory `dist/`):
 ```
 npm install
 npm run build
 ```
-(The code outputs to directory `dist/`)
 2. Navigate to `chrome://extensions`
 3. Turn on "Developer Mode"
 4. Click "Load unpacked" and select directory `dist/`
