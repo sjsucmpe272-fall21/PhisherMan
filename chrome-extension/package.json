@@ -34,6 +34,7 @@
         "webpack-fix-style-only-entries": "^0.6.1"
     },
     "devDependencies": {
+        "@tsconfig/recommended": "^1.0.1",
         "@types/chrome": "^0.0.159"
     }
 }

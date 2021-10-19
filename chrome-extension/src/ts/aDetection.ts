@@ -21,8 +21,5 @@ export default abstract class aDetection {
             .then((res) => {
                 return res.json();
             })
-            .catch((err) => {
-                console.log(err);
-            });
     }
 }

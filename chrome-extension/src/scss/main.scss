@@ -2,4 +2,22 @@
 
 html, body {
     height: initial !important;
+    @extend .p-1;
+}
+
+body {
+    width: 200px !important;
+}
+
+.bi {
+    display: inline-block;
+    vertical-align: -0.125em;
+}
+
+.font-size-small {
+    font-size: 0.8em !important;
+}
+
+#settings-btn:hover {
+    text-decoration: underline;
 }

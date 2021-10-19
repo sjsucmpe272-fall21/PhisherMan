@@ -11,6 +11,6 @@ export default class URLDetection extends aDetection {
         let res = await this.sendPost(
             { url: url }
         );
-        return res && res["malicious"];
+        return res["malicious"];
     }
 }
