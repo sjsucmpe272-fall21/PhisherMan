@@ -9,4 +9,6 @@ export default class Strings {
     public static KEY_LAST_URL = "LAST_URL";
     public static KEY_DEFAULT_API_URL = "DEFAULT_API_URL";
     public static KEY_DEFAULT_URLDETECTION_API = "DEFAULT_URLDETECTION_API";
+    public static DEFAULT_API_URL = "http://127.0.0.1:8000";
+    public static DEFAULT_URLDETECTION_API = "/url";
 }

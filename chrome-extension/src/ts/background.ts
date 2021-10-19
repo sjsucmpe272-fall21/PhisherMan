@@ -26,8 +26,8 @@ chrome.runtime.onInstalled.addListener(() => {
     console.log("Installed");
     chrome.storage.local.clear(() => {
         chrome.storage.local.set({
-            [Strings.KEY_DEFAULT_API_URL]: "http://127.0.0.1:8000",
-            [Strings.KEY_DEFAULT_URLDETECTION_API]: "/url",
+            [Strings.KEY_DEFAULT_API_URL]: Strings.DEFAULT_API_URL,
+            [Strings.KEY_DEFAULT_URLDETECTION_API]: Strings.DEFAULT_URLDETECTION_API,
         });
     });
 });
