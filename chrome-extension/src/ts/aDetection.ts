@@ -9,6 +9,8 @@ export default abstract class aDetection {
         this.path = path;
     }
 
+    abstract async detect(val: any): Promise<boolean>;
+
     async sendPost(args: Record<string, string>, headers?: Record<string, string>): Promise<JSON> {
         return fetch(
             this.host + this.path,
@@ -22,4 +24,5 @@ export default abstract class aDetection {
                 return res.json();
             })
     }
+
 }

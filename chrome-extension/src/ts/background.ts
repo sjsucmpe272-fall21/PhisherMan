@@ -58,7 +58,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         let urlDetection = new URLDetection(defaultApiUrl, defaultUrlDetectionApi);
         chrome.action.setBadgeText({ text: "" });
         chrome.action.setBadgeBackgroundColor({ color: "#555555" });
-        urlDetection.detectURL(activeUrl)
+        urlDetection.detect(activeUrl)
             .then((res) => {
                 console.log(res);
                 updateBadgeFromDetection(res);

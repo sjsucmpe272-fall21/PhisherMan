@@ -7,7 +7,7 @@ export default class URLDetection extends aDetection {
         super(host, path);
     }
 
-    async detectURL(url: string): Promise<boolean> {
+    async detect(url: string): Promise<boolean> {
         let res = await this.sendPost(
             { url: url }
         );
