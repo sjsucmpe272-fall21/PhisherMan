@@ -2,3 +2,5 @@ chrome-extension/**/*
 url-whiteblacklist/**/*
 README.pdf
 target/
+*.sqlite
+*.docx
