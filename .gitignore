@@ -3,3 +3,5 @@ chrome-extension/node_modules
 chrome-extension/dist/*
 !chrome-extension/dist/manifest.json
 target/
+*.sqlite
+.project
