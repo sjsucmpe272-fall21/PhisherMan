@@ -5,6 +5,7 @@ WORKDIR /home
 RUN python -m pip install --upgrade pip
 RUN python -m pip install redis
 RUN python -m pip install requests
+RUN python -m pip install flask
 
 RUN apt update -y && apt install cron vim -y
 
