@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: urlwhiteblacklist
+Resources:
+  cmpe272:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.7
+      CodeUri: .
+      Description: urlwhiteblacklist
+      MemorySize: 512
+      Timeout: 10
+      Role: 'arn:aws:iam::517695491684:role/service-role/cmpe272'
+      Events:
+        Api1:
+          Type: Api
+          Properties:
+            Path: '/v1/detect/{base64url}'
+            Method: GET
+      Tags:
+        'lambda-console:blueprint': microservice-http-endpoint-python
