@@ -8,14 +8,13 @@ export default abstract class aDetection {
 
     abstract async detect(val: any): Promise<boolean>;
 
-    async sendPost(args: Record<string, string>, headers?: Record<string, string>): Promise<JSON> {
+    async sendRequest(url: string, headers?: Record<string, string>): Promise<JSON> {
         return fetch(
-            this.host + this.path,
+            this.host+this.path+btoa(url),
             {
-                method: "POST",
+                method: "GET",
                 mode: "cors",
                 headers: new Headers(headers),
-                body: JSON.stringify(args),
             })
             .then((res) => {
                 return res.json();

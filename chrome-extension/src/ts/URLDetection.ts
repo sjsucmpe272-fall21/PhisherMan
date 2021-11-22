@@ -1,5 +1,6 @@
 
 import aDetection from "./aDetection";
+import Constants from "./Constants";
 
 export default class URLDetection extends aDetection {
 
@@ -17,8 +18,9 @@ export default class URLDetection extends aDetection {
     }
 
     async detect(url: string): Promise<boolean> {
-        let res = await this.sendPost(
-            { url: url }
+        let res = await this.sendRequest(
+            url,
+            { ['X-Api-Key']: Constants.API_KEY },
         );
         return res["malicious"];
     }
