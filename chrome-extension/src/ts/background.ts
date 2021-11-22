@@ -24,12 +24,6 @@ function updateBadgeFromDetection(res: boolean) {
 
 chrome.runtime.onInstalled.addListener(() => {
     console.log("Installed");
-    chrome.storage.local.clear(() => {
-        chrome.storage.local.set({
-            [Constants.KEY_DEFAULT_API_URL]: Constants.DEFAULT_API_URL,
-            [Constants.KEY_DEFAULT_URLDETECTION_API]: Constants.DEFAULT_URLDETECTION_API,
-        });
-    });
 });
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {

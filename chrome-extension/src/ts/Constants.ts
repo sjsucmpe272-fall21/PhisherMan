@@ -7,8 +7,7 @@ export default class Strings {
     public static KEY_LAST_DETECTION_RESULT = "LAST_DETECTION_RESULT";
     public static KEY_LAST_DETECTION_URL = "LAST_DETECTION_URL";
     public static KEY_LAST_URL = "LAST_URL";
-    public static KEY_DEFAULT_API_URL = "DEFAULT_API_URL";
-    public static KEY_DEFAULT_URLDETECTION_API = "DEFAULT_URLDETECTION_API";
-    public static DEFAULT_API_URL = "http://127.0.0.1:8000";
-    public static DEFAULT_URLDETECTION_API = "/url";
+    public static DEFAULT_API_URL = "https://q7zcjspceh.execute-api.us-west-1.amazonaws.com";
+    public static DEFAULT_URLDETECTION_API = "/api/v1/detect/";
+    public static API_KEY = "ZJLagjCjLC8jSOCRKP2OS5Nm7bSiMeYc1Lw1bl4o";
 }
