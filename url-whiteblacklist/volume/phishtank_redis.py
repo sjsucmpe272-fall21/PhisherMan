@@ -21,12 +21,15 @@ try:
     # https://stackoverflow.com/questions/16694907/download-large-file-in-python-with-requests
     phishtank_json_bytes = bytearray()
     logging.info("Fetching phishtank JSON...")
-    with requests.get("https://data.phishtank.com/data/online-valid.json", stream=True) as res:
-            res.raise_for_status()
-            with open(f"volume/phishtank-{int(time())}.json", 'wb') as fp:
-                for chunk in res.iter_content(chunk_size=8192):
-                    phishtank_json_bytes += chunk
-                    fp.write(chunk)
+    with requests.get(
+        "https://data.phishtank.com/data/online-valid.json",
+        stream=True,
+    ) as res:
+        res.raise_for_status()
+        with open(f"volume/phishtank-{int(time())}.json", 'wb') as fp:
+            for chunk in res.iter_content(chunk_size=8192):
+                phishtank_json_bytes += chunk
+                fp.write(chunk)
 
     logging.info("Updating Redis entries...")
     for entry in json.loads(phishtank_json_bytes):
