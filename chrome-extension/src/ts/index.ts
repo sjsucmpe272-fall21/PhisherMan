@@ -23,7 +23,6 @@ class DialogHandler {
     private getKeySet(obj: object, keyDelete: string): Set<string> {
         let keys = new Set(Object.keys(obj));
         keys.delete(keyDelete);
-        console.log(keys);
         return keys;
     }
 

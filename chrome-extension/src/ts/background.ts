@@ -42,20 +42,17 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
     chrome.storage.local.get([
         Constants.KEY_LAST_URL,
-        Constants.KEY_DEFAULT_API_URL,
-        Constants.KEY_DEFAULT_URLDETECTION_API
     ], async (items) => {
-        let lastUrl = items[Constants.KEY_LAST_URL];
-        let defaultApiUrl = items[Constants.KEY_DEFAULT_API_URL];
-        let defaultUrlDetectionApi = items[Constants.KEY_DEFAULT_URLDETECTION_API];
 
+        // Prevent page's URL being sent several times by saving last sent URL
+        let lastUrl = items[Constants.KEY_LAST_URL];
         if (lastUrl == activeUrl) {
             console.log("repeat");
-            return; // Prevent page's URL being sent several times
+            return;
         }
         chrome.storage.local.set({ [Constants.KEY_LAST_URL]: activeUrl });
 
-        let urlDetection = new URLDetection(defaultApiUrl, defaultUrlDetectionApi);
+        let urlDetection = URLDetection.getInstance();
         chrome.action.setBadgeText({ text: "" });
         chrome.action.setBadgeBackgroundColor({ color: "#555555" });
         urlDetection.detect(activeUrl)
