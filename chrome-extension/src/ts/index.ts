@@ -1,5 +1,5 @@
 
-import Strings from "./Strings";
+import Constants from "./Constants";
 
 class DialogHandler {
     dialogs = {
@@ -29,8 +29,8 @@ class DialogHandler {
     }
 
     public setActiveDialogFromRes(res: boolean): void {
-        this.setActiveUrl(res[Strings.KEY_LAST_DETECTION_URL]);
-        switch (res[Strings.KEY_LAST_DETECTION_RESULT]) {
+        this.setActiveUrl(res[Constants.KEY_LAST_DETECTION_URL]);
+        switch (res[Constants.KEY_LAST_DETECTION_RESULT]) {
             case true:
                 this.setActiveDialog("phishing");
                 break;
@@ -48,14 +48,14 @@ window.onload = () => {
         chrome.runtime.openOptionsPage();
     });
 
-    chrome.storage.local.get(Strings.KEY_LAST_DETECTION, (items) => {
+    chrome.storage.local.get(Constants.KEY_LAST_DETECTION, (items) => {
         console.log("load last detection");
         console.log(items);
-        if (!items.hasOwnProperty(Strings.KEY_LAST_DETECTION)) {
+        if (!items.hasOwnProperty(Constants.KEY_LAST_DETECTION)) {
             return;
         }
         let dialogHandler = new DialogHandler();
-        dialogHandler.setActiveDialogFromRes(items[Strings.KEY_LAST_DETECTION]);
+        dialogHandler.setActiveDialogFromRes(items[Constants.KEY_LAST_DETECTION]);
     });
 
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
