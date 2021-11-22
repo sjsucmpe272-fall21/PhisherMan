@@ -1,5 +1,5 @@
 
-import Strings from "./Strings";
+import Constants from "./Constants";
 import URLDetection from "./URLDetection";
 
 function updateBadgeFromDetection(res: boolean) {
@@ -7,15 +7,15 @@ function updateBadgeFromDetection(res: boolean) {
     let badgeColor: string;
     switch (res) {
         case true:
-            badgeText = Strings.BAD;
+            badgeText = Constants.BAD;
             badgeColor = "#FF0000";
             break;
         case false:
-            badgeText = Strings.GOOD;
+            badgeText = Constants.GOOD;
             badgeColor = "#00FF00";
             break;
         default:
-            badgeText = Strings.CAUTION;
+            badgeText = Constants.CAUTION;
             badgeColor = "#FFAA00";
     }
     chrome.action.setBadgeText({ text: badgeText });
@@ -26,8 +26,8 @@ chrome.runtime.onInstalled.addListener(() => {
     console.log("Installed");
     chrome.storage.local.clear(() => {
         chrome.storage.local.set({
-            [Strings.KEY_DEFAULT_API_URL]: Strings.DEFAULT_API_URL,
-            [Strings.KEY_DEFAULT_URLDETECTION_API]: Strings.DEFAULT_URLDETECTION_API,
+            [Constants.KEY_DEFAULT_API_URL]: Constants.DEFAULT_API_URL,
+            [Constants.KEY_DEFAULT_URLDETECTION_API]: Constants.DEFAULT_URLDETECTION_API,
         });
     });
 });
@@ -41,19 +41,19 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     let activeUrl = tab.url;
 
     chrome.storage.local.get([
-        Strings.KEY_LAST_URL,
-        Strings.KEY_DEFAULT_API_URL,
-        Strings.KEY_DEFAULT_URLDETECTION_API
+        Constants.KEY_LAST_URL,
+        Constants.KEY_DEFAULT_API_URL,
+        Constants.KEY_DEFAULT_URLDETECTION_API
     ], async (items) => {
-        let lastUrl = items[Strings.KEY_LAST_URL];
-        let defaultApiUrl = items[Strings.KEY_DEFAULT_API_URL];
-        let defaultUrlDetectionApi = items[Strings.KEY_DEFAULT_URLDETECTION_API];
+        let lastUrl = items[Constants.KEY_LAST_URL];
+        let defaultApiUrl = items[Constants.KEY_DEFAULT_API_URL];
+        let defaultUrlDetectionApi = items[Constants.KEY_DEFAULT_URLDETECTION_API];
 
         if (lastUrl == activeUrl) {
             console.log("repeat");
             return; // Prevent page's URL being sent several times
         }
-        chrome.storage.local.set({ [Strings.KEY_LAST_URL]: activeUrl });
+        chrome.storage.local.set({ [Constants.KEY_LAST_URL]: activeUrl });
 
         let urlDetection = new URLDetection(defaultApiUrl, defaultUrlDetectionApi);
         chrome.action.setBadgeText({ text: "" });
@@ -63,15 +63,15 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
                 console.log(res);
                 updateBadgeFromDetection(res);
                 let resultObj = {
-                    [Strings.KEY_LAST_DETECTION_RESULT]: res,
-                    [Strings.KEY_LAST_DETECTION_URL]: activeUrl,
+                    [Constants.KEY_LAST_DETECTION_RESULT]: res,
+                    [Constants.KEY_LAST_DETECTION_URL]: activeUrl,
                 };
-                chrome.storage.local.set({ [Strings.KEY_LAST_DETECTION]: resultObj }, () => {
+                chrome.storage.local.set({ [Constants.KEY_LAST_DETECTION]: resultObj }, () => {
                     chrome.runtime.sendMessage({ result: resultObj });
                 });
             })
             .catch((err) => {
-                console.warn(err);
+                console.error(err);
             });
     });
 });

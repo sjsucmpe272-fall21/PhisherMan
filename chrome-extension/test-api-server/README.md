@@ -1,7 +1,5 @@
 # Babel Typescript Express Pug Starter Code
 
-Cloned from https://github.com/psalire/babel-typescript-express-pug-starter-code
-
 ## Version
 
 ```
