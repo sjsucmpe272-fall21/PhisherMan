@@ -1,8 +1,8 @@
 
 export default class Strings {
-    public static GOOD = "GOOD";
-    public static BAD = "BAD";
-    public static CAUTION = "CAUTION";
+    public static GOOD = "✓";
+    public static BAD = "❗";
+    public static CAUTION = "⚠";
     public static KEY_LAST_DETECTION = "LAST_DETECTION";
     public static KEY_LAST_DETECTION_RESULT = "LAST_DETECTION_RESULT";
     public static KEY_LAST_DETECTION_URL = "LAST_DETECTION_URL";

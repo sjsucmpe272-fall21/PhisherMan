@@ -58,6 +58,7 @@ window.onload = () => {
         chrome.runtime.openOptionsPage();
     });
 
+    // Display the last detection
     chrome.storage.local.get(Constants.KEY_LAST_DETECTION, (items) => {
         console.log("load last detection");
         console.log(items);
