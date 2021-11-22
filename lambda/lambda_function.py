@@ -13,7 +13,7 @@ def respond(err, res=None):
     }
 
 def detect(url):
-    res = requests.get(f'http://52.53.156.54:8080/check/{url}')
+    res = requests.get(f'http://54.67.112.73:8080/check/{url}')
     if res.status_code==200:
         ret = res.json()
         return ret['malicious'] if 'malicious' in ret and not ret['error'] else False
