@@ -1,36 +1,45 @@
 
-import Strings from "./Strings";
+import Constants from "./Constants";
 
 class DialogHandler {
-    dialogs = {
+    private dialogElems = {
         "safe": document.querySelector("#dialog-safe"),
         "phishing": document.querySelector("#dialog-phishing"),
         "caution": document.querySelector("#dialog-caution"),
         "none": document.querySelector("#dialog-none"),
     };
-    urlText = document.querySelector("#url-text");
+    private urlTextElem = document.querySelector("#url-text");
+    private static singleton: DialogHandler;
+
+    private constructor() {}
+
+    public static getDialogHandler(): DialogHandler {
+        if (!DialogHandler.singleton) {
+            DialogHandler.singleton = new DialogHandler()
+        }
+        return DialogHandler.singleton;
+    }
 
     private getKeySet(obj: object, keyDelete: string): Set<string> {
         let keys = new Set(Object.keys(obj));
         keys.delete(keyDelete);
-        console.log(keys);
         return keys;
     }
 
     public setActiveUrl(url: string): void {
-        this.urlText.textContent = url;
+        this.urlTextElem.textContent = url;
     }
 
     public setActiveDialog(key: string): void {
-        this.dialogs[key].classList.remove("d-none");
-        for (let k of this.getKeySet(this.dialogs, key)) {
-            this.dialogs[k].classList.add("d-none");
+        this.dialogElems[key].classList.remove("d-none");
+        for (let k of this.getKeySet(this.dialogElems, key)) {
+            this.dialogElems[k].classList.add("d-none");
         }
     }
 
     public setActiveDialogFromRes(res: boolean): void {
-        this.setActiveUrl(res[Strings.KEY_LAST_DETECTION_URL]);
-        switch (res[Strings.KEY_LAST_DETECTION_RESULT]) {
+        this.setActiveUrl(res[Constants.KEY_LAST_DETECTION_URL]);
+        switch (res[Constants.KEY_LAST_DETECTION_RESULT]) {
             case true:
                 this.setActiveDialog("phishing");
                 break;
@@ -48,19 +57,20 @@ window.onload = () => {
         chrome.runtime.openOptionsPage();
     });
 
-    chrome.storage.local.get(Strings.KEY_LAST_DETECTION, (items) => {
+    // Display the last detection
+    chrome.storage.local.get(Constants.KEY_LAST_DETECTION, (items) => {
         console.log("load last detection");
         console.log(items);
-        if (!items.hasOwnProperty(Strings.KEY_LAST_DETECTION)) {
+        if (!items.hasOwnProperty(Constants.KEY_LAST_DETECTION)) {
             return;
         }
-        let dialogHandler = new DialogHandler();
-        dialogHandler.setActiveDialogFromRes(items[Strings.KEY_LAST_DETECTION]);
+        let dialogHandler = DialogHandler.getDialogHandler();
+        dialogHandler.setActiveDialogFromRes(items[Constants.KEY_LAST_DETECTION]);
     });
 
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         console.log(`msg: ${request}`);
-        let dialogHandler = new DialogHandler();
+        let dialogHandler = DialogHandler.getDialogHandler();
         dialogHandler.setActiveDialogFromRes(request.result);
     })
 };

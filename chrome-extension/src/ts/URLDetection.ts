@@ -3,8 +3,17 @@ import aDetection from "./aDetection";
 
 export default class URLDetection extends aDetection {
 
-    constructor(host: string, path: string) {
-        super(host, path);
+    private static instance: URLDetection;
+
+    private constructor() {
+        super();
+    }
+
+    public static getInstance(): URLDetection {
+        if (URLDetection.instance===undefined) {
+            URLDetection.instance = new URLDetection();
+        }
+        return URLDetection.instance;
     }
 
     async detect(url: string): Promise<boolean> {

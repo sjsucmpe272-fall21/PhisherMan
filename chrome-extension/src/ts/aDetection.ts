@@ -1,13 +1,10 @@
 
+import Constants from "./Constants";
+
 export default abstract class aDetection {
 
-    private host: string;
-    private path: string;
-
-    constructor(host: string, path: string) {
-        this.host = host;
-        this.path = path;
-    }
+    private host: string = Constants.DEFAULT_API_URL;
+    private path: string = Constants.DEFAULT_URLDETECTION_API;
 
     abstract async detect(val: any): Promise<boolean>;
 
@@ -25,4 +22,10 @@ export default abstract class aDetection {
             })
     }
 
+    public setHost(host: string) {
+        this.host = host;
+    }
+    public setPath(path: string) {
+        this.path = path;
+    }
 }
