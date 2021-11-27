@@ -36,8 +36,11 @@ try:
                 fp.write(chunk)
 
     logging.info("Updating Redis entries...")
+
     for entry in json.loads(phishtank_json_bytes):
         r.set(entry["url"], 1)
+    # Add an example url
+    r.set("https://evil.com", 1)
 
 except Exception as e:
     logging.exception(e)
