@@ -1,5 +1,5 @@
 
-export default class Strings {
+export default class Constants {
     public static GOOD = "✓";
     public static BAD = "❗";
     public static CAUTION = "⚠";
