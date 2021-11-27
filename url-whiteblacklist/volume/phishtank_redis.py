@@ -18,7 +18,7 @@ try:
     r = redis.Redis(
         host="cmpe272.smhiz2.0001.usw1.cache.amazonaws.com",
         port=6379,
-        db=0
+        db=0,
     )
 
     # Download in chunks due to MemoryError with large files
