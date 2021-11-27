@@ -12,11 +12,11 @@ services:
         depends_on:
             - redis
         tty: true
-    redis:
-        image: "redis:6.2.6"
-        expose:
-            - 8000
-        networks:
-            - main
+    # redis:
+    #     image: "redis:6.2.6"
+    #     expose:
+    #         - 8000
+    #     networks:
+    #         - main
 networks:
     main:

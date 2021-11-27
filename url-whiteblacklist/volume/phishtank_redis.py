@@ -15,7 +15,11 @@ logger.addHandler(fh)
 logger.addHandler(sh)
 
 try:
-    r = redis.Redis(host="redis", port=6379, db=0)
+    r = redis.Redis(
+        host="cmpe272.smhiz2.0001.usw1.cache.amazonaws.com",
+        port=6379,
+        db=0
+    )
 
     # Download in chunks due to MemoryError with large files
     # https://stackoverflow.com/questions/16694907/download-large-file-in-python-with-requests
