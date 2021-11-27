@@ -25,7 +25,7 @@ exports.getUsers = async (req, res, next) => {
 // @access  Public
 exports.addUser = async (req, res, next) => {
     try {
-      console.log(req.body);
+      console.log(req.body, " body");
   
       const user = await User.create(req.body);
   
