@@ -1,4 +1,4 @@
-const User = require("../models/userProfile");
+const User = require("../models/User");
 
 // @desc    Get all Users
 // @route   GET /api/v1/users
