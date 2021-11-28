@@ -40,7 +40,9 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     if (changeInfo.status != "loading") {
         return; // Only process initial url request
     }
-    let activeUrl = tab.url;
+    // Get URL without the params
+    let activeURLObj = new URL(tab.url);
+    let activeURL = `${activeURLObj.protocol}//${activeURLObj.host}${activeURLObj.pathname}`.toLowerCase();
 
     chrome.storage.local.get([
         Constants.KEY_LAST_URL,
@@ -48,22 +50,22 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
         // Prevent page's URL being sent several times by saving last sent URL
         let lastUrl = items[Constants.KEY_LAST_URL];
-        if (lastUrl == activeUrl) {
+        if (lastUrl == activeURL) {
             console.log("repeat");
             return;
         }
-        chrome.storage.local.set({ [Constants.KEY_LAST_URL]: activeUrl });
+        chrome.storage.local.set({ [Constants.KEY_LAST_URL]: activeURL });
 
         let urlDetection = URLDetection.getInstance();
         chrome.action.setBadgeText({ text: "" });
         chrome.action.setBadgeBackgroundColor({ color: "#555555" });
-        urlDetection.detect(activeUrl)
+        urlDetection.detect(activeURL)
             .then((res) => {
                 console.log(res);
                 updateBadgeFromDetection(res);
                 let resultObj = {
                     [Constants.KEY_LAST_DETECTION_RESULT]: res,
-                    [Constants.KEY_LAST_DETECTION_URL]: activeUrl,
+                    [Constants.KEY_LAST_DETECTION_URL]: activeURL,
                 };
                 chrome.storage.local.set({ [Constants.KEY_LAST_DETECTION]: resultObj }, () => {
                     chrome.runtime.sendMessage({ result: resultObj });
@@ -71,6 +73,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             })
             .catch((err) => {
                 console.error(err);
+                updateBadgeFromDetection(null);
+                chrome.runtime.sendMessage({ result: "error" });
             });
     });
 });
