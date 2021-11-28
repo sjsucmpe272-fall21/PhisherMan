@@ -85,18 +85,47 @@ window.onload = () => {
             [Constants.KEY_REDIRECT_ENABLED]: OptionsForm.getRedirectCheckbox().checked,
             [Constants.KEY_REDIRECT_CUSTOM_URL_ENABLED]: OptionsForm.getCustomRedirectURLCheckbox().checked,
         };
+        var errorMsg = [];
 
         if (config[Constants.KEY_VT_ENABLED]) {
-            config[Constants.KEY_VT_API_KEY] = OptionsForm.getVTText().value;
+            let val = OptionsForm.getVTText().value;
+            if (val) {
+                config[Constants.KEY_VT_API_KEY] = val;
+            }
+            else {
+                errorMsg.push("API Key is required to use VirusTotal");
+            }
         }
         if (config[Constants.KEY_REDIRECT_ENABLED]) {
             if (OptionsForm.getCustomRedirectURLCheckbox().checked) {
-                config[Constants.KEY_REDIRECT_CUSTOM_URL] = OptionsForm.getCustomRedirectURLText().value;
+                let val = OptionsForm.getCustomRedirectURLText().value;
+                if (val) {
+                    config[Constants.KEY_REDIRECT_CUSTOM_URL] = val;
+                }
+                else {
+                    errorMsg.push("Custom URL is blank");
+                }
             }
         }
 
-        console.log(config);
+        if (errorMsg.length) {
+            OptionsForm.getSuccessMsg().classList.add("d-none");
+            const elem = OptionsForm.getFailureMsg();
+            for (let err of errorMsg) {
+                let errDiv = document.createElement("div");
+                errDiv.innerText = err;
+                elem.appendChild(errDiv);
+            }
+            elem.classList.remove("d-none");
+            setTimeout(() => {
+                elem.classList.add("d-none");
+                elem.innerText = "Unable to save";
+            }, 5000);
+            return;
+        }
+
         chrome.storage.sync.set(config, () => {
+            OptionsForm.getFailureMsg().classList.add("d-none");
             OptionsForm.getSuccessMsg().classList.remove("d-none");
             setTimeout(() => {
                 OptionsForm.getSuccessMsg().classList.add("d-none");
