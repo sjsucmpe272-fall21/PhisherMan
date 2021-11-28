@@ -5,4 +5,8 @@ chrome-extension/dist/*
 target/
 *.sqlite
 .project
+<<<<<<< HEAD
 UI\frontend\node_modules
+=======
+server/node_modules
+
