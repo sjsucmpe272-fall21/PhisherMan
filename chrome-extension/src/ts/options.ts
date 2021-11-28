@@ -66,6 +66,10 @@ window.onload = () => {
             OptionsForm.getCustomRedirectURLText().value = res[Constants.KEY_REDIRECT_CUSTOM_URL];
         }
 
+        OptionsForm.toggleElemDisplay(
+            OptionsForm.getVTCheckbox().checked,
+            OptionsForm.getVTGroup(),
+        );
         OptionsForm.getCustomRedirectURLCheckbox().disabled = !OptionsForm.getRedirectCheckbox().checked;
         OptionsForm.toggleElemDisplay(
             OptionsForm.getRedirectCheckbox().checked && OptionsForm.getCustomRedirectURLCheckbox().checked,
@@ -77,24 +81,27 @@ window.onload = () => {
         e.preventDefault();
 
         var config = {
-            vt: OptionsForm.getVTCheckbox().checked,
-            redirect: OptionsForm.getRedirectCheckbox().checked,
+            [Constants.KEY_VT_ENABLED]: OptionsForm.getVTCheckbox().checked,
+            [Constants.KEY_REDIRECT_ENABLED]: OptionsForm.getRedirectCheckbox().checked,
+            [Constants.KEY_REDIRECT_CUSTOM_URL_ENABLED]: OptionsForm.getCustomRedirectURLCheckbox().checked,
         };
 
-        if (config.vt) {
-            config["vt_key"] = OptionsForm.getVTText().value;
+        if (config[Constants.KEY_VT_ENABLED]) {
+            config[Constants.KEY_VT_API_KEY] = OptionsForm.getVTText().value;
         }
-        if (config.redirect) {
+        if (config[Constants.KEY_REDIRECT_ENABLED]) {
             if (OptionsForm.getCustomRedirectURLCheckbox().checked) {
-                config["custom_redirect"] = OptionsForm.getCustomRedirectURLText().value;
+                config[Constants.KEY_REDIRECT_CUSTOM_URL] = OptionsForm.getCustomRedirectURLText().value;
             }
         }
 
-        OptionsForm.getSuccessMsg().classList.remove("d-none");
-        setTimeout(() => {
-            OptionsForm.getSuccessMsg().classList.add("d-none");
-        }, 3000);
         console.log(config);
+        chrome.storage.sync.set(config, () => {
+            OptionsForm.getSuccessMsg().classList.remove("d-none");
+            setTimeout(() => {
+                OptionsForm.getSuccessMsg().classList.add("d-none");
+            }, 3000);
+        });
     });
 
     OptionsForm.getVTCheckbox().addEventListener("click", () => {
