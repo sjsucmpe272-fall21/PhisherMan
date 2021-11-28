@@ -11,7 +11,7 @@ block main
         div.form-check
             input#check-vt.form-check-input(type="checkbox")
             label.form-check-label(for="check-vt") Enable VirusTotal URL scan
-        div#text-vt-group.form-group.d-none
+        div#text-vt-group.form-group.subitem.d-none
             label(for="text-vt") API Key
             input#text-vt.form-control.input-box(type="text")
         div.form-check
@@ -20,8 +20,11 @@ block main
         div.form-check
             input#check-redirect-custom.form-check-input(type="checkbox" disabled)
             label.form-check-label(for="check-redirect-custom") Use custom redirect URL
-        div#text-redirect-group.form-group.d-none
+        div#text-redirect-custom-group.form-group.subitem.d-none
             label(for="text-redirect") Redirect URL
             input#text-redirect.form-control.input-box(type="text" placeholder="https://example.com")
         button.btn.btn-primary(type="submit")
             | Save
+        div
+            span#success-msg.text-success.d-none Successfully saved
+            span#failure-msg.text-danger.d-none Unable to save

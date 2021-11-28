@@ -23,7 +23,15 @@ function updateBadgeFromDetection(res: boolean) {
 }
 
 chrome.runtime.onInstalled.addListener(() => {
-    console.log("Installed");
+    chrome.storage.sync.set({
+        [Constants.KEY_VT_ENABLED]: false,
+        [Constants.KEY_VT_API_KEY]: undefined,
+        [Constants.KEY_REDIRECT_ENABLED]: true,
+        [Constants.KEY_REDIRECT_CUSTOM_URL_ENABLED]: false,
+        [Constants.KEY_REDIRECT_CUSTOM_URL]: undefined,
+    }, () => {
+        console.log("Installed and set default values");
+    });
 });
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {

@@ -9,3 +9,7 @@ body {
     @extend .mb-1;
     width: min(500px, 100%) !important;
 }
+
+.subitem {
+    @extend .ms-4;
+}
