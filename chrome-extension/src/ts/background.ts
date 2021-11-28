@@ -2,7 +2,7 @@
 import Constants from "./Constants";
 import URLDetection from "./URLDetection";
 
-function updateBadgeFromDetection(res: boolean) {
+export function updateBadgeFromDetection(res: boolean) {
     let badgeText: string;
     let badgeColor: string;
     switch (res) {
@@ -40,8 +40,13 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     if (changeInfo.status != "loading") {
         return; // Only process initial url request
     }
-    // Get URL without the params
     let activeURLObj = new URL(tab.url);
+    // Only process http(s)
+    if (activeURLObj.protocol != "http:" && activeURLObj.protocol != "https:") {
+        console.log("not http, skipping");
+        return;
+    }
+    // Get URL without the params
     let activeURL = `${activeURLObj.protocol}//${activeURLObj.host}${activeURLObj.pathname}`.toLowerCase();
 
     chrome.storage.local.get([
