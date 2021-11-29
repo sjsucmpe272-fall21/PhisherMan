@@ -3,7 +3,11 @@ import redis
 from flask import Flask, jsonify
 from base64 import b64decode
 
-r = redis.Redis(host="redis", port=6379, db=0)
+r = redis.Redis(
+    host="cmpe272.smhiz2.0001.usw1.cache.amazonaws.com",
+    port=6379,
+    db=0,
+)
 app = Flask(__name__)
 
 

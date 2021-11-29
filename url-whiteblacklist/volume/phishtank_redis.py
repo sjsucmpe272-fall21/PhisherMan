@@ -15,7 +15,11 @@ logger.addHandler(fh)
 logger.addHandler(sh)
 
 try:
-    r = redis.Redis(host="redis", port=6379, db=0)
+    r = redis.Redis(
+        host="cmpe272.smhiz2.0001.usw1.cache.amazonaws.com",
+        port=6379,
+        db=0,
+    )
 
     # Download in chunks due to MemoryError with large files
     # https://stackoverflow.com/questions/16694907/download-large-file-in-python-with-requests
@@ -32,8 +36,11 @@ try:
                 fp.write(chunk)
 
     logging.info("Updating Redis entries...")
+
     for entry in json.loads(phishtank_json_bytes):
         r.set(entry["url"], 1)
+    # Add an example url
+    r.set("https://evil.com/", 1)
 
 except Exception as e:
     logging.exception(e)
