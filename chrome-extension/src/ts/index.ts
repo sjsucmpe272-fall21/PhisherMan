@@ -11,6 +11,7 @@ class DialogHandler {
     // private svgQuestionHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/></svg>`;
     private spinnerHTML = `<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>`;
     private vtEnabled: boolean;
+    private vtAPIKey: string;
     private static singleton: DialogHandler;
 
     public static ID_MAIN_DIALOG = "MAIN_DIALOG";
@@ -21,36 +22,125 @@ class DialogHandler {
 
         const updateVTDialog = () => {
             let btnId = `${DialogHandler.ID_VT_DIALOG}-btn`;
+            // Add VirusTotal button
             this.newDialog(
                 undefined,
                 DialogHandler.ID_VT_DIALOG,
                 `<button id="${btnId}" class="btn btn-sm bg-transparent border-0">Run a VirusTotal scan?</button>`,
                 "text-muted",
                 "",
-                ["text-center"],
+                [],
                 () => {
                     let elem = document.getElementById(btnId);
                     elem.addEventListener("click", () => {
                         elem.innerHTML = `Run a VirusTotal scan ${this.spinnerHTML}`;
+                        console.log(this.vtAPIKey);
+                        console.log(this.getActiveUrl());
+
+                        fetch(
+                            "https://www.virustotal.com/api/v3/urls",
+                            {
+                                method: "POST",
+                                headers: {
+                                    "Accept": "application/json",
+                                    "Content-Type": "application/x-www-form-urlencoded",
+                                    "x-apikey": this.vtAPIKey,
+                                },
+                                body: new URLSearchParams({url: this.getActiveUrl()}),
+                                mode: "cors",
+                            }
+                        )
+                        .then(res => res.json())
+                        .then(async json => {
+                            const getResults = async () => {
+                                let res = await fetch(
+                                    `https://www.virustotal.com/api/v3/analyses/${json["data"]["id"]}`,
+                                    {
+                                        method: "GET",
+                                        headers: {
+                                            "Accept": "application/json",
+                                            "x-apikey": this.vtAPIKey,
+                                        },
+                                        mode: "cors",
+                                    }
+                                );
+                                res = await res.json();
+
+                                console.log(res);
+                                if (res["data"]["attributes"]["status"]!="completed") {
+                                    return false;
+                                }
+
+                                let resultsObj = res["data"]["attributes"]["results"];
+                                let resultsObjKeys = Object.keys(resultsObj);
+                                let phishingCount = 0;
+                                let maliciousCount = 0;
+                                let totCount = resultsObjKeys.length;
+                                for (let key of resultsObjKeys) {
+                                    if (resultsObj["results"]=="phishing") {
+                                        phishingCount++;
+                                    }
+                                    else if (resultsObj["results"]=="malicious") {
+                                        maliciousCount++;
+                                    }
+                                }
+                                let msg: string;
+                                if (phishingCount) {
+                                    msg = "Phishing";
+                                }
+                                else if (maliciousCount) {
+                                    msg = "Malicious";
+                                }
+                                else {
+                                    msg = "No detections";
+                                }
+                                this.newDialog(
+                                    phishingCount ? true : (maliciousCount ? undefined : false),
+                                    DialogHandler.ID_VT_DIALOG,
+                                    `<a href="https://www.virustotal.com/gui/url/${res["meta"]["url_info"]["id"]}" target="_blank" rel="noreferrer">VT ${phishingCount+maliciousCount}/${totCount}</a> (${msg})`,
+                                );
+                                return true;
+                            };
+                            do {
+                                // Wait 1.5 seconds before requesting results
+                                console.log('Sleep');
+                                await (new Promise(resolve => setTimeout(resolve, 1500)));
+                                var success = await getResults();
+                            } while(!success);
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        });
                     });
                 }
             );
         }
 
-        chrome.storage.sync.get(Constants.KEY_VT_ENABLED, (items) => {
+        chrome.storage.sync.get([
+            Constants.KEY_VT_ENABLED,
+            Constants.KEY_VT_API_KEY,
+        ], (items) => {
             this.vtEnabled = items[Constants.KEY_VT_ENABLED];
-            this.vtEnabled && updateVTDialog();
+            if (this.vtEnabled) {
+                this.vtAPIKey = items[Constants.KEY_VT_API_KEY];
+                updateVTDialog();
+            }
         });
         chrome.storage.onChanged.addListener((changes, areaName) => {
             console.log(changes);
             console.log(areaName);
-            if (areaName == "sync" && changes.hasOwnProperty(Constants.KEY_VT_ENABLED)) {
-                this.vtEnabled = changes[Constants.KEY_VT_ENABLED].newValue;
-                if (this.vtEnabled) {
-                    updateVTDialog();
+            if (areaName == "sync") {
+                if (changes.hasOwnProperty(Constants.KEY_VT_ENABLED)) {
+                    this.vtEnabled = changes[Constants.KEY_VT_ENABLED].newValue;
+                    if (this.vtEnabled) {
+                        updateVTDialog();
+                    }
+                    else {
+                        this.removeDialog(DialogHandler.ID_VT_DIALOG);
+                    }
                 }
-                else {
-                    this.removeDialog(DialogHandler.ID_VT_DIALOG);
+                if (changes.hasOwnProperty(Constants.KEY_VT_API_KEY)) {
+                    this.vtAPIKey = changes[Constants.KEY_VT_API_KEY].newValue;
                 }
             }
         })
@@ -65,6 +155,10 @@ class DialogHandler {
 
     public setActiveUrl(url: string): void {
         this.urlTextElem.textContent = url;
+    }
+
+    public getActiveUrl(): string {
+        return this.urlTextElem.textContent;
     }
 
     public getMessageFromResult(res: boolean): string {
@@ -110,6 +204,7 @@ class DialogHandler {
         else {
             newDialog = this.createDialogElem(id);
         }
+        newDialog.className = "";
         if (containerClassList !== undefined) {
             containerClassList.forEach((s) => {
                 newDialog.classList.add(s);
