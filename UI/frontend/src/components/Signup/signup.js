@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import './App.css';
+// import './App.css';
 import axios from 'axios';
-import { CountryDropdown } from 'react-country-region-selector';
-import { constats } from './ip/config';
+// import { CountryDropdown } from 'react-country-region-selector';
+// import { constats } from './ip/config';
 
 //Define a Login Component
 class Signup extends Component {
@@ -20,7 +20,6 @@ class Signup extends Component {
             zipCode: "",
             streetAddress: "",
             city: "",
-            country: "",
             authFlag: false,
             message: ""
         }
@@ -34,16 +33,10 @@ class Signup extends Component {
         this.zipCodeChangeHandler = this.zipCodeChangeHandler.bind(this);
         this.streetAddressChangeHandler = this.streetAddressChangeHandler.bind(this);
         this.cityChangeHandler = this.cityChangeHandler.bind(this);
-        this.countryChangeHandler = this.countryChangeHandler.bind(this);
 
         this.submitSignup = this.submitSignup.bind(this);
     }
-    //Call the Will Mount to set the auth Flag to false
-    componentWillMount() {
-        this.setState({
-            authFlag: false
-        })
-    }
+
     //firstName change handler to update state variable with the text entered by the user
     firstNameChangeHandler = (e) => {
         this.setState({
@@ -68,21 +61,6 @@ class Signup extends Component {
             password: e.target.value
         })
     }
-    //User type change handler to update state variable with the text entered by the user
-    userTypeChangeHandler = (e) => {
-        console.log(e.target.value)
-        this.setState({
-            userType: e.target.value
-        })
-    }
-
-    deliveryTypeChangeHandler = (e) => {
-        console.log(e.target.value)
-        this.setState({
-            deliveryType: e.target.value
-        })
-    }
-
 
     //Contact change handler to update state variable with the text entered by the user
     contactChangeHandler = (e) => {
@@ -108,29 +86,16 @@ class Signup extends Component {
             city: e.target.value
         })
     }
-    //Country change handler to update state variable with the text entered by the user
-    countryChangeHandler = (e) => {
-        this.setState({
-            city: e.target.value
-        })
-    }
-
-    selectCountry(val) {
-        this.setState({ country: val });
-    }
 
     //submit Login handler to send a request to the node backend
     submitSignup = (e) => {
-        //var headers = new Headers();
 
-        //prevent page from refresh
         e.preventDefault();
         const data = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
             email: this.state.email,
             password: this.state.password,
-            userType: this.state.userType,
             deliveryType: this.state.deliveryType,
             contact: this.state.contact,
             zipCode: this.state.zipCode,
@@ -141,7 +106,7 @@ class Signup extends Component {
 
         console.log("before signup");
         //make a post request with the user data
-        axios.post(`http://${constats.AWS.ipAddress}:3001/signup`, data)
+        axios.post(`http://localhost:3001/signup`, data)
             .then(response => {
 
                 console.log("Status Code : ", response.status);
@@ -150,10 +115,8 @@ class Signup extends Component {
                         authFlag: true,
                         message: 'You Are Signed up!!!, Now continue to login.'
                     })
-                    console.log("in signup 200: ", this.state.email, "userType: ", this.state.userType);
                     const data1 = {
                         email: this.state.email,
-                        userType: this.state.userType,
                     }
                     this.props.loginuser(data1);
                 }
@@ -280,17 +243,7 @@ class Signup extends Component {
             <br />
 
             <br />
-            <div className="form-group">
-                <label className="control-label col-sm-2" htmlFor="country">Country:</label>
-                <div className="col-sm-4">
-                    {<CountryDropdown
-                        value={this.state.country}
-                        onChange={(val) => this.selectCountry(val)} />
-                    }
-                    {/*onChange = {this.countryChangeHandler}*/}
-                </div>
-            </div>
-            <br />
+            
             <div className="form-group">
                 <div className="col-sm-4">
                     <br />

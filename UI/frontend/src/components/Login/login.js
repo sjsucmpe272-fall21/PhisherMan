@@ -1,28 +1,24 @@
 import React, { Component } from 'react';
-import './App.css';
+// import './App.css';
 import axios from 'axios';
-import cookie from 'react-cookies';
+// import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import { constats } from './ip/config';
+// import { constats } from './ip/config';
 
 
 //Define a Login Component
 class Login extends Component {
-    //call the constructor method
     constructor(props) {
-        //Call the constrictor of Super class i.e The Component
         super(props);
-        //maintain the state required for this component
         this.state = {
             username: "",
             password: "",
-            userType: "",
             authFlag: false,
             message: ""
         }
         //Bind the handlers to this class
-        this.usernameChangeHandler = this.usernameChangeHandler.bind(this);
+        this.emailChangeHandler = this.emailChangeHandler.bind(this);
         this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
         this.submitLogin = this.submitLogin.bind(this);
     }
@@ -33,7 +29,7 @@ class Login extends Component {
     //     })
     // }
     //username change handler to update state variable with the text entered by the user
-    usernameChangeHandler = (e) => {
+    emailChangeHandler = (e) => {
         this.setState({
             username: e.target.value
         })
@@ -46,9 +42,7 @@ class Login extends Component {
     }
     //submit Login handler to send a request to the node backend
     submitLogin = (e) => {
-        //var headers = new Headers();
 
-        //prevent page from refresh
         e.preventDefault();
         const data = {
             email: this.state.username,
@@ -59,14 +53,10 @@ class Login extends Component {
         axios.defaults.withCredentials = true;
 
         //make a post request with the user data
-        axios.post(`http://${constats.AWS.ipAddress}:3001/login`, data)
+        axios.post(`http://localhost:3001/login`, data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {
-                    // this.setState({
-                    //     authFlag: true,
-                    //     userType: response.data.userType
-                    // })
                     <Redirect to="/home"></Redirect>
                 }
             })
@@ -81,25 +71,9 @@ class Login extends Component {
     }
 
     render() {
-        //redirect based on successful login
-        // let redirectVar = null;
-        // console.log("this.state.userType: ", this.state.userType)
-        // if (cookie.load('cookie')) {
-        //     if (this.state.userType === "customer") {
-        //         console.log("customer");
-        //         redirectVar = <Redirect to="/home" />
-        //     }
-        //     else {
-        //         console.log("rest");
-        //         redirectVar = <Redirect to="/restroHome" />
-        //     }
-        // }
         return (
             <div>
-                {/* {redirectVar} */}
-
                 <div className="container">
-
                     <div className="login-form">
                         <div className="main-div">
                             <div className="panel">
@@ -111,7 +85,7 @@ class Login extends Component {
                             </div>
                             <div className="form-group">
                                 <div className="col-sm-4">
-                                    <input required="required" onChange={this.usernameChangeHandler} type="text" className="form-control" name="username" placeholder="Username" />
+                                    <input required="required" onChange={this.emailChangeHandler} type="text" className="form-control" name="Email" placeholder="Email" />
                                 </div>
                                 <br />
                                 <br />
@@ -126,7 +100,7 @@ class Login extends Component {
                             <button onClick={this.submitLogin} className="btn btn-primary">Login</button>
                         </div>
                         <br />
-                        <Link to="/signup">Signup</Link>
+                        {/* <Redirect to="/signup">Signup</Link> */}
                     </div>
                 </div>
             </div>
