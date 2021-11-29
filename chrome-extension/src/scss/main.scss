@@ -6,7 +6,7 @@ html, body {
 }
 
 body {
-    width: 200px !important;
+    width: 250px !important;
 }
 
 .bi {
@@ -14,10 +14,14 @@ body {
     vertical-align: -0.125em;
 }
 
-.font-size-small {
-    font-size: 0.8em !important;
+a {
+    text-decoration: none;
 }
 
-#settings-btn:hover {
+#settings-btn:hover, a:hover {
     text-decoration: underline;
+}
+
+#dialogs div {
+    @extend .text-center;
 }

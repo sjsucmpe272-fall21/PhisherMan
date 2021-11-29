@@ -7,6 +7,7 @@ module.exports = {
     entry: {
         'background': path.resolve(SCRIPTS_PATH, 'background.ts'),
         'index': path.resolve(SCRIPTS_PATH, 'index.ts'),
+        'options': path.resolve(SCRIPTS_PATH, 'options.ts'),
     },
     devtool: 'inline-cheap-module-source-map',
     output: {

@@ -7,7 +7,8 @@ const SCSS_DIR = 'src/scss/';
 module.exports = {
     mode: 'production',
     entry: {
-        'main': path.resolve(SCSS_DIR, 'main.scss')
+        'main': path.resolve(SCSS_DIR, 'main.scss'),
+        'options': path.resolve(SCSS_DIR, 'options.scss')
     },
     output: {
         path: path.resolve(__dirname, './dist')

@@ -1,6 +1,34 @@
 extends base.pug
 
+block scripts
+    script(src="options.js")
 block styles
-    link(rel="stylesheet" href="main.css")
+    link(rel="stylesheet" href="options.css")
 block header
     h1 Phisherman Options
+block main
+    form#form-options
+        div.form-check
+            input#check-vt.form-check-input(type="checkbox")
+            label.form-check-label(for="check-vt") Enable VirusTotal URL scan
+        div#text-vt-group.form-group.subitem.d-none
+            label(for="text-vt") API Key
+            input#text-vt.form-control.input-box(type="text")
+            small.text-muted Need an API key?
+                a(href="https://developers.virustotal.com/reference/getting-started" target="_blank" rel="noreferrer")
+                    |  https://developers.virustotal.com/reference/getting-started
+        div.form-check
+            input#check-redirect.form-check-input(type="checkbox")
+            label.form-check-label(for="check-redirect") Redirect on phishing detection
+        div.form-check
+            input#check-redirect-custom.form-check-input(type="checkbox" disabled)
+            label.form-check-label(for="check-redirect-custom") Use custom redirect URL
+        div#text-redirect-custom-group.form-group.subitem.d-none
+            label(for="text-redirect") Redirect URL
+            input#text-redirect.form-control.input-box.mb-1(type="text" placeholder="https://example.com")
+        button.btn.btn-primary(type="submit")
+            | Save
+        div
+            span#success-msg.text-success.d-none Successfully saved
+            div#failure-msg.text-danger.d-none
+                div Unable to save
