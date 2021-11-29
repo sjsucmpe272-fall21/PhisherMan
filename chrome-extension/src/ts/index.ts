@@ -20,13 +20,13 @@ class DialogHandler {
     private constructor() {
         this.createDialogElem(DialogHandler.ID_MAIN_DIALOG);
 
-        const updateVTDialog = () => {
+        const updateVTDialog = (btnStr?: string) => {
             let btnId = `${DialogHandler.ID_VT_DIALOG}-btn`;
             // Add VirusTotal button
             this.newDialog(
                 undefined,
                 DialogHandler.ID_VT_DIALOG,
-                `<button id="${btnId}" class="btn btn-sm bg-transparent border-0">Run a VirusTotal scan?</button>`,
+                `<button id="${btnId}" class="btn btn-sm bg-transparent border-0">${btnStr?btnStr:"Run a VirusTotal scan?"}</button>`,
                 "text-muted",
                 "",
                 [],
@@ -77,10 +77,11 @@ class DialogHandler {
                                 let maliciousCount = 0;
                                 let totCount = resultsObjKeys.length;
                                 for (let key of resultsObjKeys) {
-                                    if (resultsObj["results"]=="phishing") {
+                                    let result = resultsObj[key]["result"];
+                                    if (result=="phishing") {
                                         phishingCount++;
                                     }
-                                    else if (resultsObj["results"]=="malicious") {
+                                    else if (result=="malicious"||result=="malware") {
                                         maliciousCount++;
                                     }
                                 }
@@ -97,19 +98,27 @@ class DialogHandler {
                                 this.newDialog(
                                     phishingCount ? true : (maliciousCount ? undefined : false),
                                     DialogHandler.ID_VT_DIALOG,
-                                    `<a href="https://www.virustotal.com/gui/url/${res["meta"]["url_info"]["id"]}" target="_blank" rel="noreferrer">VT ${phishingCount+maliciousCount}/${totCount}</a> (${msg})`,
+                                    `${msg} (<a href="https://www.virustotal.com/gui/url/${res["meta"]["url_info"]["id"]}" target="_blank" rel="noreferrer">VT ${phishingCount+maliciousCount}/${totCount}</a>)`,
                                 );
                                 return true;
                             };
+                            let tries = 0;
                             do {
                                 // Wait 1.5 seconds before requesting results
                                 console.log('Sleep');
                                 await (new Promise(resolve => setTimeout(resolve, 1500)));
                                 var success = await getResults();
+                                if (++tries==5) {
+                                    break;
+                                }
                             } while(!success);
+                            if (!success) {
+                                updateVTDialog("Too many retries. Wait and try again");
+                            }
                         })
                         .catch(err => {
                             console.error(err);
+                            updateVTDialog("Encountered an error");
                         });
                     });
                 }
