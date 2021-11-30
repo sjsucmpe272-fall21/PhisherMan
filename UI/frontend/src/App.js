@@ -3,11 +3,12 @@
 // import Search from './components/Search/Search';
 import Login from './components/Login/login';
 import Signup from './components/Signup/signup';
+import RouterRoutes from './routes/Routes';
 
 function App() {
   return (
     <div className="App">
-      <Login />
+      <RouterRoutes />
       {/* <Signup/> */}
     </div>
   );

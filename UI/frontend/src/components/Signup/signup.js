@@ -1,16 +1,10 @@
 import React, { Component } from 'react';
-// import './App.css';
 import axios from 'axios';
-// import { CountryDropdown } from 'react-country-region-selector';
-// import { constats } from './ip/config';
 
 //Define a Login Component
 class Signup extends Component {
-    //call the constructor method
     constructor(props) {
-        //Call the constrictor of Super class i.e The Component
         super(props);
-        //maintain the state required for this component
         this.state = {
             firstName: "",
             lastName: "",
@@ -33,7 +27,6 @@ class Signup extends Component {
         this.zipCodeChangeHandler = this.zipCodeChangeHandler.bind(this);
         this.streetAddressChangeHandler = this.streetAddressChangeHandler.bind(this);
         this.cityChangeHandler = this.cityChangeHandler.bind(this);
-
         this.submitSignup = this.submitSignup.bind(this);
     }
 
@@ -115,10 +108,6 @@ class Signup extends Component {
                         authFlag: true,
                         message: 'You Are Signed up!!!, Now continue to login.'
                     })
-                    const data1 = {
-                        email: this.state.email,
-                    }
-                    this.props.loginuser(data1);
                 }
                 else if (response.status === 201) {
                     console.log(response.data)
@@ -126,10 +115,7 @@ class Signup extends Component {
                         message: "Email already exsists",
                         authFlag: false
                     })
-
-                    console.log("Status Code Now: ", this.state.username);
-
-                    //this.props.loginuser(this.state.username);
+                    //console.log("Status Code Now: ", this.state.username);
                 }
             })
             .catch(err => {
@@ -147,7 +133,7 @@ class Signup extends Component {
 
             <br />
             <div className="form-group">
-                <label className="control-label col-sm-2" htmlFor="email">Restaurant Name:</label>
+                <label className="control-label col-sm-2" htmlFor="email">First Name:</label>
                 <div className="col-sm-4">
                     <input type="text" onChange={this.firstNameChangeHandler} className="form-control" id="firstName" placeholder="Name" name="firstName" required />
                 </div>
@@ -156,7 +142,7 @@ class Signup extends Component {
             <br />
 
             <div className="form-group">
-                <label className="control-label col-sm-2" htmlFor="email">Owner Name:</label>
+                <label className="control-label col-sm-2" htmlFor="email">Last Name:</label>
                 <div className="col-sm-4">
                     <input type="text" onChange={this.lastNameChangeHandler} className="form-control" id="firstName" placeholder="optional" name="lastName" required />
                 </div>
@@ -177,30 +163,6 @@ class Signup extends Component {
                 <label className="control-label col-sm-2" htmlFor="email">Password:</label>
                 <div className="col-sm-4">
                     <input type="password" onChange={this.passwordChangeHandler} className="form-control" id="password" placeholder="Password" name="password" required />
-                </div>
-            </div>
-            <br />
-            <br />
-
-            <div className="form-group">
-                <label className="control-label col-sm-2" htmlFor="userType">You are a ?</label>
-                <div className="col-sm-4">
-
-                    <input type="radio" id="customer" name="userType" value="customer" onClick={this.userTypeChangeHandler} />
-                    <label for="customer">Customer</label>
-                    <input type="radio" id="restaurant" name="userType" value="restaurant" onClick={this.userTypeChangeHandler} />
-                    <label for="customer">Restaurant Owner</label>
-
-                </div>
-            </div>
-            <br />
-            <br />
-
-
-            <div className="form-group">
-                <label className="control-label col-sm-2" htmlFor="deliveryType">Delivery Type:</label>
-                <div className="col-sm-4">
-                    <input type="deliveryType" onChange={this.deliveryTypeChangeHandler} className="form-control" id="deliveryType" placeholder="Pickup / Delivery" name="deliveryType" required />
                 </div>
             </div>
             <br />
@@ -241,9 +203,8 @@ class Signup extends Component {
                 </div>
             </div>
             <br />
-
             <br />
-            
+
             <div className="form-group">
                 <div className="col-sm-4">
                     <br />
