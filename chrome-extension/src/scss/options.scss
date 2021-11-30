@@ -1,0 +1,19 @@
+@use "base";
+
+body {
+    @extend .p-3;
+}
+
+.input-box {
+    @extend .py-1;
+    @extend .px-0;
+    width: min(525px, 100%) !important;
+}
+
+.subitem {
+    @extend .ms-4;
+}
+
+#failure-msg div {
+    @extend .mb-0;
+}

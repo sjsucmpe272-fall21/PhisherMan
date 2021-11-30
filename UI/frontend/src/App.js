@@ -1,14 +1,11 @@
-import logo from './logo.svg';
-import './App.css';
-import Search from './components/Search/Search';
+import RouterRoutes from './routes/Routes';
 
 function App() {
-  return (
-    <div className="App">
-      <Search />
-
-    </div>
-  );
+	return (
+		<div className="App">
+			<RouterRoutes />
+		</div>
+	);
 }
 
 export default App;
