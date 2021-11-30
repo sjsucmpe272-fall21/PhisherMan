@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import base64url from "base64url";
 import "../../App.css";
 import axios from "axios";
@@ -11,7 +11,7 @@ const Search = () => {
     const safe = base64url(url);
     setB64Url(safe);
      getAPI(b64url);
-    //console.log( result)
+    console.log( {result})
   };
 
   const config = {
@@ -32,10 +32,14 @@ const Search = () => {
       )
       .then((res) => {
         console.log(res.data);
-        setResult(res.data)
+        setResult(res.data.malicious)
         return res.data;
       });
   };  
+
+  useEffect(() => {
+    getAPI()
+  },[result])
 
   return (
     <div className="search-page">
@@ -53,7 +57,7 @@ const Search = () => {
           <i className="fas fa-search"></i>
         </button>
       </div>
-      {result == 'false' ? "URL is Safe" : "URL is Malicious"}
+      {result != "" ?  <h1 className="header-search">URL is Safe </h1> : <h1 className="header-search">URL is Malicious</h1>}
     </div>
   );
 };
