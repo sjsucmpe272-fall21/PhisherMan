@@ -100,7 +100,7 @@ class Login extends Component {
                             <button onClick={this.submitLogin} className="btn btn-primary">Login</button>
                         </div>
                         <br />
-                        {/* <Redirect to="/signup">Signup</Link> */}
+                        <Link to="/login">Signup here</Link>
                     </div>
                 </div>
             </div>

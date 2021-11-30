@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Redirect } from 'react-router';
+import { Link, Routes } from 'react-router-dom';
 
 //Define a Login Component
 class Signup extends Component {
@@ -135,7 +137,7 @@ class Signup extends Component {
             <div className="form-group">
                 <label className="control-label col-sm-2" htmlFor="email">First Name:</label>
                 <div className="col-sm-4">
-                    <input type="text" onChange={this.firstNameChangeHandler} className="form-control" id="firstName" placeholder="Name" name="firstName" required />
+                    <input type="text" onChange={this.firstNameChangeHandler} className="form-control" id="firstName" placeholder="First Name" name="firstName" required />
                 </div>
             </div>
             <br />
@@ -144,7 +146,7 @@ class Signup extends Component {
             <div className="form-group">
                 <label className="control-label col-sm-2" htmlFor="email">Last Name:</label>
                 <div className="col-sm-4">
-                    <input type="text" onChange={this.lastNameChangeHandler} className="form-control" id="firstName" placeholder="optional" name="lastName" required />
+                    <input type="text" onChange={this.lastNameChangeHandler} className="form-control" id="firstName" placeholder="Last Name" name="lastName" required />
                 </div>
             </div>
             <br />
@@ -212,6 +214,10 @@ class Signup extends Component {
                 </div>
             </div>
             <br />
+            <br />
+            <br/>
+            <Link to="/login">Login here</Link>
+            
         </div>;
 
         return (<div className="container">
