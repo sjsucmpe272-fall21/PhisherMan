@@ -4,14 +4,6 @@ import URLBlackListDetection from "./URLBlackListDetection";
 import URLMLDetection from "./URLMLDetection";
 import { updateBadgeFromDetection } from "./updateBadgeFromDetection";
 
-function redirectToSafeURL(url: string) {
-    // Redirect if found phishing
-    console.log("Redirecting...");
-    chrome.tabs.update({
-        url: url,
-    });
-}
-
 chrome.runtime.onInstalled.addListener(() => {
     chrome.storage.sync.set({
         [Constants.KEY_VT_ENABLED]: false,
@@ -53,7 +45,11 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         if (lastUrl == activeURL) {
             console.log(`URL repeat (${activeURL}), skipping...`);
             if (items[Constants.KEY_LAST_DETECTION][Constants.KEY_LAST_DETECTION_RESULT].isPhishing) {
-                redirectToSafeURL(chrome.runtime.getURL("phishing.html"));
+                chrome.tabs.update({
+                    url: syncItems[Constants.KEY_REDIRECT_CUSTOM_URL_ENABLED] ?
+                            syncItems[Constants.KEY_REDIRECT_CUSTOM_URL] :
+                            chrome.runtime.getURL("phishing.html"),
+                });
             }
             return;
         }
@@ -75,7 +71,12 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             // Redirect if found phishing
             console.log(syncItems[Constants.KEY_REDIRECT_ENABLED]);
             if (syncItems[Constants.KEY_REDIRECT_ENABLED] && res) {
-                redirectToSafeURL(chrome.runtime.getURL("phishing.html"));
+                console.log("Redirecting...");
+                chrome.tabs.update({
+                    url: syncItems[Constants.KEY_REDIRECT_CUSTOM_URL_ENABLED] ?
+                            syncItems[Constants.KEY_REDIRECT_CUSTOM_URL] :
+                            chrome.runtime.getURL("phishing.html"),
+                });
             }
 
             updateBadgeFromDetection(res);
