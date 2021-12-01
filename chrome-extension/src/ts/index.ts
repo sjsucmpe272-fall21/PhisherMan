@@ -28,7 +28,7 @@ class DialogHandler {
                 DialogHandler.ID_VT_DIALOG,
                 `<button id="${btnId}" class="btn btn-sm bg-transparent border-0">${btnStr?btnStr:"Run a VirusTotal scan?"}</button>`,
                 "text-muted",
-                null,
+                "",
                 () => {
                     let elem = document.getElementById(btnId);
                     elem.addEventListener("click", () => {
@@ -36,6 +36,7 @@ class DialogHandler {
                         console.log(this.vtAPIKey);
                         console.log(this.getActiveUrl());
 
+                        // Todo: move VirusTotal request to dedicated class
                         fetch(
                             "https://www.virustotal.com/api/v3/urls",
                             {
@@ -103,13 +104,13 @@ class DialogHandler {
                             };
                             let tries = 0;
                             do {
-                                // Wait 1.5 seconds before requesting results
-                                console.log('Sleep');
-                                await (new Promise(resolve => setTimeout(resolve, 1500)));
-                                var success = await getResults();
                                 if (++tries==5) {
                                     break;
                                 }
+                                console.log('Sleep');
+                                // Wait 1.5 seconds before requesting results
+                                await (new Promise(resolve => setTimeout(resolve, 1500)));
+                                var success = await getResults();
                             } while(!success);
                             if (!success) {
                                 updateVTDialog("Too many retries. Wait and try again");
