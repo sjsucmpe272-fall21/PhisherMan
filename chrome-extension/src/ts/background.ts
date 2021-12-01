@@ -1,26 +1,7 @@
 
 import Constants from "./Constants";
 import URLBlackListDetection from "./URLBlackListDetection";
-
-export function updateBadgeFromDetection(res: boolean) {
-    let badgeText: string;
-    let badgeColor: string;
-    switch (res) {
-        case true:
-            badgeText = Constants.BAD;
-            badgeColor = "#FF0000";
-            break;
-        case false:
-            badgeText = Constants.GOOD;
-            badgeColor = "#00FF00";
-            break;
-        default:
-            badgeText = Constants.CAUTION;
-            badgeColor = "#FFAA00";
-    }
-    chrome.action.setBadgeText({ text: badgeText });
-    chrome.action.setBadgeBackgroundColor({ color: badgeColor });
-}
+import { updateBadgeFromDetection } from "./updateBadgeFromDetection";
 
 chrome.runtime.onInstalled.addListener(() => {
     chrome.storage.sync.set({
@@ -80,7 +61,11 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             resultObj = "error";
         }
         chrome.storage.local.set({ [Constants.KEY_LAST_DETECTION]: resultObj }, () => {
-            chrome.runtime.sendMessage({ result: resultObj });
+            console.log('sending msg...')
+            chrome.runtime.sendMessage({
+                result: resultObj,
+                source: "blacklist",
+            });
         });
     });
 });

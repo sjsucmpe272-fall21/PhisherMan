@@ -1,6 +1,6 @@
 
 import Constants from "./Constants";
-import { updateBadgeFromDetection } from "./background";
+import { updateBadgeFromDetection } from "./updateBadgeFromDetection";
 
 class DialogHandler {
     private urlTextElem = document.querySelector("#url-text");
@@ -152,7 +152,7 @@ class DialogHandler {
                     this.vtAPIKey = changes[Constants.KEY_VT_API_KEY].newValue;
                 }
             }
-        })
+        });
     }
 
     public static getDialogHandler(): DialogHandler {
@@ -269,7 +269,8 @@ window.onload = () => {
 
     // Listen for messages from the background script
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        console.log(`msg: ${request}`);
+        console.log("Got msg");
+        console.log(request);
         let dialogHandler = DialogHandler.getDialogHandler();
         let dialogMessage: string;
         switch(request.result) {
