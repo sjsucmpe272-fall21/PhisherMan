@@ -61,10 +61,10 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         }
         chrome.storage.local.set({ [Constants.KEY_LAST_URL]: activeURL });
 
-        let urlDetection = URLBlackListDetection.getInstance();
+        let urlBlacklistDetection = URLBlackListDetection.getInstance();
         chrome.action.setBadgeText({ text: "" });
         chrome.action.setBadgeBackgroundColor({ color: "#555555" });
-        urlDetection.detect(activeURL)
+        urlBlacklistDetection.detect(activeURL)
             .then((res) => {
                 console.log(res);
                 updateBadgeFromDetection(res);

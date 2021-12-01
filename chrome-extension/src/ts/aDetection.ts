@@ -1,14 +1,17 @@
 
-import Constants from "./Constants";
-
 export default abstract class aDetection {
 
-    private host: string = Constants.DEFAULT_API_URL;
-    private path: string = Constants.DEFAULT_URLDETECTION_API;
+    private host: string;
+    private path: string;
 
     abstract async detect(val: any): Promise<boolean>;
 
     async sendRequest(url: string, headers?: Record<string, string>): Promise<JSON> {
+
+        if (this.host===undefined || this.path===undefined) {
+            throw "No host/path";
+        }
+
         return fetch(
             this.host+this.path+btoa(url),
             {

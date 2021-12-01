@@ -6,8 +6,10 @@ export default class URLBlackListDetection extends aDetection {
 
     private static instance: URLBlackListDetection;
 
-    private constructor() {
+    constructor() {
         super();
+        this.setHost(Constants.DEFAULT_API_URL);
+        this.setPath(Constants.DEFAULT_URLBLACKLIST_API);
     }
 
     public static getInstance(): URLBlackListDetection {
