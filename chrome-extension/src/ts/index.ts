@@ -261,10 +261,10 @@ window.onload = () => {
         dialogHandler.setActiveUrl(items[Constants.KEY_LAST_DETECTION][Constants.KEY_LAST_DETECTION_URL]);
         let lastResult = items[Constants.KEY_LAST_DETECTION][Constants.KEY_LAST_DETECTION_RESULT];
         dialogHandler.newDialog(
-            lastResult,
+            lastResult.isPhishing,
             DialogHandler.ID_MAIN_DIALOG,
         );
-        updateBadgeFromDetection(lastResult);
+        updateBadgeFromDetection(lastResult.isPhishing);
     });
 
     // Listen for messages from the background script
@@ -273,16 +273,17 @@ window.onload = () => {
         console.log(request);
         let dialogHandler = DialogHandler.getDialogHandler();
         let dialogMessage: string;
-        switch(request.result) {
+        let result = request.result[Constants.KEY_LAST_DETECTION_RESULT].isPhishing;
+        switch(result) {
             case "error":
                 dialogMessage = "Error processing URL"
                 break;
             default:
-                dialogMessage = dialogHandler.getMessageFromResult(request.result);
+                dialogMessage = dialogHandler.getMessageFromResult(result);
         }
         dialogHandler.setActiveUrl(request.result[Constants.KEY_LAST_DETECTION_URL]);
         dialogHandler.newDialog(
-            request.result[Constants.KEY_LAST_DETECTION_RESULT],
+            result,
             DialogHandler.ID_MAIN_DIALOG,
             dialogMessage,
         );

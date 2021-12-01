@@ -1,0 +1,11 @@
+extends base.pug
+
+block styles
+    link(rel="stylesheet" href="phishing.css")
+block main
+    div.h-100.d-flex.flex-column.align-items-center.justify-content-center
+        h1.display-1.text-danger Phishing detected
+        h1 Blocked by Phisherman
+        div The page you attempted to navigate to was detected to be a phishing attempt.
+        div.text-secondary
+            small See Phisherman settings to change or disable this page.            
