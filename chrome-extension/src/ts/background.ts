@@ -1,26 +1,8 @@
 
 import Constants from "./Constants";
-import URLDetection from "./URLDetection";
-
-export function updateBadgeFromDetection(res: boolean) {
-    let badgeText: string;
-    let badgeColor: string;
-    switch (res) {
-        case true:
-            badgeText = Constants.BAD;
-            badgeColor = "#FF0000";
-            break;
-        case false:
-            badgeText = Constants.GOOD;
-            badgeColor = "#00FF00";
-            break;
-        default:
-            badgeText = Constants.CAUTION;
-            badgeColor = "#FFAA00";
-    }
-    chrome.action.setBadgeText({ text: badgeText });
-    chrome.action.setBadgeBackgroundColor({ color: badgeColor });
-}
+import URLBlackListDetection from "./URLBlackListDetection";
+import URLMLDetection from "./URLMLDetection";
+import { updateBadgeFromDetection } from "./updateBadgeFromDetection";
 
 chrome.runtime.onInstalled.addListener(() => {
     chrome.storage.sync.set({
@@ -35,8 +17,7 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-    console.log("tabs.onUpdated");
-    console.log(changeInfo);
+    console.log(`tabs.onUpdated ${changeInfo.status}`);
     if (changeInfo.status != "loading") {
         return; // Only process initial url request
     }
@@ -47,39 +28,77 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         return;
     }
     // Get URL without the params
-    let activeURL = `${activeURLObj.protocol}//${activeURLObj.host}${activeURLObj.pathname}`.toLowerCase();
+    let activeURL = `${activeURLObj.protocol}//${activeURLObj.host}${activeURLObj.pathname}`;
+
+    const syncItems = await chrome.storage.sync.get([
+        Constants.KEY_REDIRECT_ENABLED,
+        Constants.KEY_REDIRECT_CUSTOM_URL_ENABLED,
+        Constants.KEY_REDIRECT_CUSTOM_URL,
+    ]);
 
     chrome.storage.local.get([
-        Constants.KEY_LAST_URL,
+        Constants.KEY_LAST_DETECTION,
     ], async (items) => {
 
         // Prevent page's URL being sent several times by saving last sent URL
-        let lastUrl = items[Constants.KEY_LAST_URL];
+        let lastUrl = items[Constants.KEY_LAST_DETECTION][Constants.KEY_LAST_DETECTION_URL];
         if (lastUrl == activeURL) {
-            console.log("repeat");
+            console.log(`URL repeat (${activeURL}), skipping...`);
+            if (items[Constants.KEY_LAST_DETECTION][Constants.KEY_LAST_DETECTION_RESULT].isPhishing) {
+                chrome.tabs.update({
+                    url: syncItems[Constants.KEY_REDIRECT_CUSTOM_URL_ENABLED] ?
+                            syncItems[Constants.KEY_REDIRECT_CUSTOM_URL] :
+                            chrome.runtime.getURL("phishing.html"),
+                });
+            }
             return;
         }
-        chrome.storage.local.set({ [Constants.KEY_LAST_URL]: activeURL });
 
-        let urlDetection = URLDetection.getInstance();
+        let urlBlacklistDetection = URLBlackListDetection.getInstance();
+        let urlMLDetection = URLMLDetection.getInstance();
         chrome.action.setBadgeText({ text: "" });
         chrome.action.setBadgeBackgroundColor({ color: "#555555" });
-        urlDetection.detect(activeURL)
-            .then((res) => {
-                console.log(res);
-                updateBadgeFromDetection(res);
-                let resultObj = {
-                    [Constants.KEY_LAST_DETECTION_RESULT]: res,
-                    [Constants.KEY_LAST_DETECTION_URL]: activeURL,
-                };
-                chrome.storage.local.set({ [Constants.KEY_LAST_DETECTION]: resultObj }, () => {
-                    chrome.runtime.sendMessage({ result: resultObj });
+        var resultObj: object|string;
+        try {
+            let res: boolean = await urlBlacklistDetection.detect(activeURL);
+            var source = "blacklist";
+            // If blacklist didn't find phishing, call ml model
+            if (!res) {
+                res = await urlMLDetection.detect(activeURL);
+                source = "ml";
+            }
+
+            // Redirect if found phishing
+            console.log(syncItems[Constants.KEY_REDIRECT_ENABLED]);
+            if (syncItems[Constants.KEY_REDIRECT_ENABLED] && res) {
+                console.log("Redirecting...");
+                chrome.tabs.update({
+                    url: syncItems[Constants.KEY_REDIRECT_CUSTOM_URL_ENABLED] ?
+                            syncItems[Constants.KEY_REDIRECT_CUSTOM_URL] :
+                            chrome.runtime.getURL("phishing.html"),
                 });
-            })
-            .catch((err) => {
-                console.error(err);
-                updateBadgeFromDetection(null);
-                chrome.runtime.sendMessage({ result: "error" });
+            }
+
+            updateBadgeFromDetection(res);
+            resultObj = {
+                [Constants.KEY_LAST_DETECTION_RESULT]: {
+                    isPhishing: res,
+                    source: source,
+                },
+                [Constants.KEY_LAST_DETECTION_URL]: activeURL,
+            };
+        }
+        catch(err) {
+            console.error(err);
+            updateBadgeFromDetection(null);
+            resultObj = "error";
+        }
+        chrome.storage.local.set({ [Constants.KEY_LAST_DETECTION]: resultObj }, () => {
+            console.log('sending msg...');
+            chrome.runtime.sendMessage({
+                result: resultObj,
+                source: source,
             });
+        });
     });
 });

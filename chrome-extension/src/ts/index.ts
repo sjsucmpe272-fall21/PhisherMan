@@ -1,6 +1,6 @@
 
 import Constants from "./Constants";
-import { updateBadgeFromDetection } from "./background";
+import { updateBadgeFromDetection } from "./updateBadgeFromDetection";
 
 class DialogHandler {
     private urlTextElem = document.querySelector("#url-text");
@@ -29,7 +29,6 @@ class DialogHandler {
                 `<button id="${btnId}" class="btn btn-sm bg-transparent border-0">${btnStr?btnStr:"Run a VirusTotal scan?"}</button>`,
                 "text-muted",
                 "",
-                [],
                 () => {
                     let elem = document.getElementById(btnId);
                     elem.addEventListener("click", () => {
@@ -37,6 +36,7 @@ class DialogHandler {
                         console.log(this.vtAPIKey);
                         console.log(this.getActiveUrl());
 
+                        // Todo: move VirusTotal request to dedicated class
                         fetch(
                             "https://www.virustotal.com/api/v3/urls",
                             {
@@ -104,13 +104,13 @@ class DialogHandler {
                             };
                             let tries = 0;
                             do {
-                                // Wait 1.5 seconds before requesting results
-                                console.log('Sleep');
-                                await (new Promise(resolve => setTimeout(resolve, 1500)));
-                                var success = await getResults();
                                 if (++tries==5) {
                                     break;
                                 }
+                                console.log('Sleep');
+                                // Wait 1.5 seconds before requesting results
+                                await (new Promise(resolve => setTimeout(resolve, 1500)));
+                                var success = await getResults();
                             } while(!success);
                             if (!success) {
                                 updateVTDialog("Too many retries. Wait and try again");
@@ -152,7 +152,7 @@ class DialogHandler {
                     this.vtAPIKey = changes[Constants.KEY_VT_API_KEY].newValue;
                 }
             }
-        })
+        });
     }
 
     public static getDialogHandler(): DialogHandler {
@@ -203,22 +203,14 @@ class DialogHandler {
         dialogMessage?: string,
         customClass?: string,
         customIcon?: string,
-        containerClassList?: string[],
         callback?: ()=>void,
     ): void {
-        let newDialog = document.getElementById(id);
-        if (newDialog) {
-            newDialog.innerHTML = "";
+        let dialogElem = document.getElementById(id);
+        if (!dialogElem) {
+            dialogElem = this.createDialogElem(id);
         }
-        else {
-            newDialog = this.createDialogElem(id);
-        }
-        newDialog.className = "";
-        if (containerClassList !== undefined) {
-            containerClassList.forEach((s) => {
-                newDialog.classList.add(s);
-            });
-        }
+        dialogElem.innerHTML = "";
+        dialogElem.className = "";
         if (dialogMessage === undefined) {
             dialogMessage = this.getMessageFromResult(classification);
         }
@@ -243,8 +235,8 @@ class DialogHandler {
         if (customIcon !== undefined) {
             dialogIcon = customIcon;
         }
-        newDialog.classList.add(dialogClass);
-        newDialog.innerHTML += dialogIcon + `<span> ${dialogMessage}</span>`;
+        dialogElem.classList.add(dialogClass);
+        dialogElem.innerHTML += dialogIcon + `<span> ${dialogMessage}</span>`;
 
         callback && callback();
     }
@@ -269,27 +261,29 @@ window.onload = () => {
         dialogHandler.setActiveUrl(items[Constants.KEY_LAST_DETECTION][Constants.KEY_LAST_DETECTION_URL]);
         let lastResult = items[Constants.KEY_LAST_DETECTION][Constants.KEY_LAST_DETECTION_RESULT];
         dialogHandler.newDialog(
-            lastResult,
+            lastResult.isPhishing,
             DialogHandler.ID_MAIN_DIALOG,
         );
-        updateBadgeFromDetection(lastResult);
+        updateBadgeFromDetection(lastResult.isPhishing);
     });
 
     // Listen for messages from the background script
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        console.log(`msg: ${request}`);
+        console.log("Got msg");
+        console.log(request);
         let dialogHandler = DialogHandler.getDialogHandler();
         let dialogMessage: string;
-        switch(request.result) {
+        let result = request.result[Constants.KEY_LAST_DETECTION_RESULT].isPhishing;
+        switch(result) {
             case "error":
                 dialogMessage = "Error processing URL"
                 break;
             default:
-                dialogMessage = dialogHandler.getMessageFromResult(request.result);
+                dialogMessage = dialogHandler.getMessageFromResult(result);
         }
         dialogHandler.setActiveUrl(request.result[Constants.KEY_LAST_DETECTION_URL]);
         dialogHandler.newDialog(
-            request.result[Constants.KEY_LAST_DETECTION_RESULT],
+            result,
             DialogHandler.ID_MAIN_DIALOG,
             dialogMessage,
         );

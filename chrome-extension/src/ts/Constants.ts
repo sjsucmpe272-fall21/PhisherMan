@@ -6,9 +6,9 @@ export default class Constants {
     public static KEY_LAST_DETECTION = "LAST_DETECTION";
     public static KEY_LAST_DETECTION_RESULT = "LAST_DETECTION_RESULT";
     public static KEY_LAST_DETECTION_URL = "LAST_DETECTION_URL";
-    public static KEY_LAST_URL = "LAST_URL";
     public static DEFAULT_API_URL = "https://q7zcjspceh.execute-api.us-west-1.amazonaws.com";
-    public static DEFAULT_URLDETECTION_API = "/api/v1/detect/";
+    public static DEFAULT_URLBLACKLIST_API = "/api/v2/detect/url/blacklist/";
+    public static DEFAULT_URLML_API = "/api/v2/detect/url/ml/";
     public static API_KEY = "ZJLagjCjLC8jSOCRKP2OS5Nm7bSiMeYc1Lw1bl4o";
 
     public static KEY_VT_ENABLED = "VT_ENABLED";

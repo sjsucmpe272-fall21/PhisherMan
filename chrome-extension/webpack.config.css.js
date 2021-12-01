@@ -8,7 +8,8 @@ module.exports = {
     mode: 'production',
     entry: {
         'main': path.resolve(SCSS_DIR, 'main.scss'),
-        'options': path.resolve(SCSS_DIR, 'options.scss')
+        'options': path.resolve(SCSS_DIR, 'options.scss'),
+        'phishing': path.resolve(SCSS_DIR, 'phishing.scss'),
     },
     output: {
         path: path.resolve(__dirname, './dist')
