@@ -47,7 +47,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         return;
     }
     // Get URL without the params
-    let activeURL = `${activeURLObj.protocol}//${activeURLObj.host}${activeURLObj.pathname}`.toLowerCase();
+    let activeURL = `${activeURLObj.protocol}//${activeURLObj.host}${activeURLObj.pathname}`;
 
     chrome.storage.local.get([
         Constants.KEY_LAST_URL,
