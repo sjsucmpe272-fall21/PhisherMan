@@ -19,6 +19,7 @@ def detect(url):
         return ret['malicious'] if 'malicious' in ret and not ret['error'] else False
     return False
 
+
 def lambda_handler(event, context):
 
     try:
@@ -29,7 +30,7 @@ def lambda_handler(event, context):
                     'malicious': detect(base64url),
                 })
             else:
-                return respond(ValueError('Unsupported method "{}"'.format(operation)))
+                return respond(ValueError('Unsupported method "{}"'.format(event['httpMethod'])))
         else:
             return respond(ValueError('Invoked with non-HTTP request'))
     except Exception as e:
