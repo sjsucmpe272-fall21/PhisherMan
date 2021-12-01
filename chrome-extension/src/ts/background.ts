@@ -64,22 +64,23 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         let urlBlacklistDetection = URLBlackListDetection.getInstance();
         chrome.action.setBadgeText({ text: "" });
         chrome.action.setBadgeBackgroundColor({ color: "#555555" });
-        urlBlacklistDetection.detect(activeURL)
-            .then((res) => {
-                console.log(res);
-                updateBadgeFromDetection(res);
-                let resultObj = {
-                    [Constants.KEY_LAST_DETECTION_RESULT]: res,
-                    [Constants.KEY_LAST_DETECTION_URL]: activeURL,
-                };
-                chrome.storage.local.set({ [Constants.KEY_LAST_DETECTION]: resultObj }, () => {
-                    chrome.runtime.sendMessage({ result: resultObj });
-                });
-            })
-            .catch((err) => {
-                console.error(err);
-                updateBadgeFromDetection(null);
-                chrome.runtime.sendMessage({ result: "error" });
-            });
+        var resultObj: object|string;
+        try {
+            let res = await urlBlacklistDetection.detect(activeURL);
+            console.log(res);
+            updateBadgeFromDetection(res);
+            resultObj = {
+                [Constants.KEY_LAST_DETECTION_RESULT]: res,
+                [Constants.KEY_LAST_DETECTION_URL]: activeURL,
+            };
+        }
+        catch(err) {
+            console.error(err);
+            updateBadgeFromDetection(null);
+            resultObj = "error";
+        }
+        chrome.storage.local.set({ [Constants.KEY_LAST_DETECTION]: resultObj }, () => {
+            chrome.runtime.sendMessage({ result: resultObj });
+        });
     });
 });
