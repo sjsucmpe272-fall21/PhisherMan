@@ -28,8 +28,7 @@ class DialogHandler {
                 DialogHandler.ID_VT_DIALOG,
                 `<button id="${btnId}" class="btn btn-sm bg-transparent border-0">${btnStr?btnStr:"Run a VirusTotal scan?"}</button>`,
                 "text-muted",
-                "",
-                [],
+                null,
                 () => {
                     let elem = document.getElementById(btnId);
                     elem.addEventListener("click", () => {
@@ -203,22 +202,14 @@ class DialogHandler {
         dialogMessage?: string,
         customClass?: string,
         customIcon?: string,
-        containerClassList?: string[],
         callback?: ()=>void,
     ): void {
-        let newDialog = document.getElementById(id);
-        if (newDialog) {
-            newDialog.innerHTML = "";
+        let dialogElem = document.getElementById(id);
+        if (!dialogElem) {
+            dialogElem = this.createDialogElem(id);
         }
-        else {
-            newDialog = this.createDialogElem(id);
-        }
-        newDialog.className = "";
-        if (containerClassList !== undefined) {
-            containerClassList.forEach((s) => {
-                newDialog.classList.add(s);
-            });
-        }
+        dialogElem.innerHTML = "";
+        dialogElem.className = "";
         if (dialogMessage === undefined) {
             dialogMessage = this.getMessageFromResult(classification);
         }
@@ -243,8 +234,8 @@ class DialogHandler {
         if (customIcon !== undefined) {
             dialogIcon = customIcon;
         }
-        newDialog.classList.add(dialogClass);
-        newDialog.innerHTML += dialogIcon + `<span> ${dialogMessage}</span>`;
+        dialogElem.classList.add(dialogClass);
+        dialogElem.innerHTML += dialogIcon + `<span> ${dialogMessage}</span>`;
 
         callback && callback();
     }
