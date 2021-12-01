@@ -2,19 +2,19 @@
 import aDetection from "./aDetection";
 import Constants from "./Constants";
 
-export default class URLBlackListDetection extends aDetection {
+export default class URLMLDetection extends aDetection {
 
-    private static instance: URLBlackListDetection;
+    private static instance: URLMLDetection;
 
     private constructor() {
         super();
     }
 
-    public static getInstance(): URLBlackListDetection {
-        if (URLBlackListDetection.instance===undefined) {
-            URLBlackListDetection.instance = new URLBlackListDetection();
+    public static getInstance(): URLMLDetection {
+        if (URLMLDetection.instance===undefined) {
+            URLMLDetection.instance = new URLMLDetection();
         }
-        return URLBlackListDetection.instance;
+        return URLMLDetection.instance;
     }
 
     async detect(url: string): Promise<boolean> {

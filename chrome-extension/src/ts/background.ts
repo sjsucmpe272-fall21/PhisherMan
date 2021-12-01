@@ -1,6 +1,6 @@
 
 import Constants from "./Constants";
-import URLDetection from "./URLDetection";
+import URLBlackListDetection from "./URLBlackListDetection";
 
 export function updateBadgeFromDetection(res: boolean) {
     let badgeText: string;
@@ -56,12 +56,12 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         // Prevent page's URL being sent several times by saving last sent URL
         let lastUrl = items[Constants.KEY_LAST_URL];
         if (lastUrl == activeURL) {
-            console.log("repeat");
+            console.log("URL repeat, skipping...");
             return;
         }
         chrome.storage.local.set({ [Constants.KEY_LAST_URL]: activeURL });
 
-        let urlDetection = URLDetection.getInstance();
+        let urlDetection = URLBlackListDetection.getInstance();
         chrome.action.setBadgeText({ text: "" });
         chrome.action.setBadgeBackgroundColor({ color: "#555555" });
         urlDetection.detect(activeURL)
