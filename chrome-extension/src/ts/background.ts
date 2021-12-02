@@ -44,7 +44,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         let lastUrl = items[Constants.KEY_LAST_DETECTION][Constants.KEY_LAST_DETECTION_URL];
         if (lastUrl == activeURL) {
             console.log(`URL repeat (${activeURL}), skipping...`);
-            if (items[Constants.KEY_LAST_DETECTION][Constants.KEY_LAST_DETECTION_RESULT].isPhishing) {
+            if (syncItems[Constants.KEY_REDIRECT_ENABLED] &&
+                items[Constants.KEY_LAST_DETECTION][Constants.KEY_LAST_DETECTION_RESULT].isPhishing) {
                 chrome.tabs.update({
                     url: syncItems[Constants.KEY_REDIRECT_CUSTOM_URL_ENABLED] ?
                             syncItems[Constants.KEY_REDIRECT_CUSTOM_URL] :
