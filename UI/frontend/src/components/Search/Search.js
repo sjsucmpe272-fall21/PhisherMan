@@ -6,12 +6,35 @@ const Search = () => {
   const [url, setUrl] = useState("");
   const [b64url, setB64Url] = useState("");
   const [result, setResult] = useState("");
-  const getStatus = () => {
+  const [resultML, setResultML] = useState("");
+  const getStatus = async () => {
     console.log(url);
     const safe = base64url(url);
     setB64Url(safe);
-     getAPI(b64url);
-    console.log( {result})
+    const data = await axios
+      .get(
+        `https://q7zcjspceh.execute-api.us-west-1.amazonaws.com/api/v1/detect/${b64url}`,
+        config
+      )
+      .then((res) => {
+        console.log(res.data);
+        setResult(res.data.malicious);
+      });
+
+    console.log({ result });
+
+
+    const dataML = await axios
+    .get(
+      `https://q7zcjspceh.execute-api.us-west-1.amazonaws.com/api/v2/detect/url/ml/${b64url}`,
+      config
+    )
+    .then((res) => {
+      console.log(res.data);
+      setResultML(res.data.malicious);
+    });
+
+
   };
 
   const config = {
@@ -31,15 +54,39 @@ const Search = () => {
         config
       )
       .then((res) => {
-        console.log(res.data);
-        setResult(res.data.malicious)
+        console.log(res.data, " For ML");
+        setResult(res.data.malicious);
         return res.data;
       });
-  };  
+  };
+
+  const renderComponentML = (result) => {
+    if (result === false) {
+      return (
+        <h1 className="header-search">
+          URL is Safe by running ML{String(result)}{" "}
+        </h1>
+      );
+    } else if (result === true) {
+      return <h1 className="header-search">URL is Malicious </h1>;
+    }
+  };
+
+  const renderComponent = (result) => {
+    if (result === false) {
+      return (
+        <h1 className="header-search">
+          URL is Safe {String(result)}{" "}
+        </h1>
+      );
+    } else if (result === true) {
+      return <h1 className="header-search">URL is Malicious </h1>;
+    }
+  };
 
   useEffect(() => {
-    getAPI()
-  },[result])
+    console.log(String(result));
+  }, [result]);
 
   return (
     <div className="search-page">
@@ -57,7 +104,9 @@ const Search = () => {
           <i className="fas fa-search"></i>
         </button>
       </div>
-      {result != "" ?  <h1 className="header-search">URL is Safe </h1> : <h1 className="header-search">URL is Malicious</h1>}
+      {renderComponent(result)}
+      {renderComponentML(result)}
+      {/* {result != "" ?  <h1 className="header-search">URL is Safe </h1> : <h1 className="header-search">URL is Malicious</h1>} */}
     </div>
   );
 };
