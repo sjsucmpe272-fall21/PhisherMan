@@ -2,12 +2,17 @@ import React, { useState, useEffect } from "react";
 import base64url from "base64url";
 import "../../App.css";
 import axios from "axios";
+import Extention from "./Extention";
 const Search = () => {
   const [url, setUrl] = useState("");
   const [b64url, setB64Url] = useState("");
   const [result, setResult] = useState("");
   const [resultML, setResultML] = useState("");
   const getStatus = async () => {
+    if (url == "") {
+      emptyURL()
+    }
+    else{
     console.log(url);
     const safe =  base64url(url);
      //setB64Url(safe);
@@ -32,6 +37,7 @@ const Search = () => {
         console.log(res.data);
         setResultML(res.data.malicious);
       });
+    }
   };
 
   const config = {
@@ -77,6 +83,10 @@ const Search = () => {
     }
   };
 
+  const emptyURL = () => {
+    return <h1 className="header-search">Please add URL in the text box </h1>;
+  }
+
   useEffect(() => {
     console.log(String(result));
   }, [result]);
@@ -97,9 +107,10 @@ const Search = () => {
           <i className="fas fa-search"></i>
         </button>
       </div>
+      {emptyURL()}
       {renderComponent(result)}
       {renderComponentML(resultML)}
-      {/* {result != "" ?  <h1 className="header-search">URL is Safe </h1> : <h1 className="header-search">URL is Malicious</h1>} */}
+      <Extention ></Extention>
     </div>
   );
 };
