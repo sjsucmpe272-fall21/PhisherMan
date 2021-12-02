@@ -9,11 +9,11 @@ const Search = () => {
   const [resultML, setResultML] = useState("");
   const getStatus = async () => {
     console.log(url);
-    const safe = base64url(url);
-    setB64Url(safe);
-    const data = await axios
+    const safe =  base64url(url);
+     //setB64Url(safe);
+    await axios
       .get(
-        `https://q7zcjspceh.execute-api.us-west-1.amazonaws.com/api/v1/detect/${b64url}`,
+        `https://q7zcjspceh.execute-api.us-west-1.amazonaws.com/api/v1/detect/${safe}=`,
         config
       )
       .then((res) => {
@@ -23,18 +23,15 @@ const Search = () => {
 
     console.log({ result });
 
-
-    const dataML = await axios
-    .get(
-      `https://q7zcjspceh.execute-api.us-west-1.amazonaws.com/api/v2/detect/url/ml/${b64url}`,
-      config
-    )
-    .then((res) => {
-      console.log(res.data);
-      setResultML(res.data.malicious);
-    });
-
-
+    await axios
+      .get(
+        `https://q7zcjspceh.execute-api.us-west-1.amazonaws.com/api/v2/detect/url/ml/${safe}`,
+        config
+      )
+      .then((res) => {
+        console.log(res.data);
+        setResultML(res.data.malicious);
+      });
   };
 
   const config = {
@@ -47,18 +44,18 @@ const Search = () => {
     "x-api-key": "ZJLagjCjLC8jSOCRKP2OS5Nm7bSiMeYc1Lw1bl4o",
   };
 
-  const getAPI = (b64url) => {
-    axios
-      .get(
-        `https://q7zcjspceh.execute-api.us-west-1.amazonaws.com/api/v1/detect/${b64url}`,
-        config
-      )
-      .then((res) => {
-        console.log(res.data, " For ML");
-        setResult(res.data.malicious);
-        return res.data;
-      });
-  };
+  // const getAPI = (b64url) => {
+  //   axios
+  //     .get(
+  //       `https://q7zcjspceh.execute-api.us-west-1.amazonaws.com/api/v1/detect/${b64url}`,
+  //       config
+  //     )
+  //     .then((res) => {
+  //       console.log(res.data, " For ML");
+  //       setResult(res.data.malicious);
+  //       return res.data;
+  //     });
+  // };
 
   const renderComponentML = (result) => {
     if (result === false) {
@@ -74,11 +71,7 @@ const Search = () => {
 
   const renderComponent = (result) => {
     if (result === false) {
-      return (
-        <h1 className="header-search">
-          URL is Safe {String(result)}{" "}
-        </h1>
-      );
+      return <h1 className="header-search">URL is Safe {String(result)} </h1>;
     } else if (result === true) {
       return <h1 className="header-search">URL is Malicious </h1>;
     }
@@ -105,7 +98,7 @@ const Search = () => {
         </button>
       </div>
       {renderComponent(result)}
-      {renderComponentML(result)}
+      {renderComponentML(resultML)}
       {/* {result != "" ?  <h1 className="header-search">URL is Safe </h1> : <h1 className="header-search">URL is Malicious</h1>} */}
     </div>
   );
