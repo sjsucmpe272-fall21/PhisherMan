@@ -3,6 +3,9 @@ import base64url from "base64url";
 import "../../App.css";
 import axios from "axios";
 import Extention from "./Extention";
+import Navbar from "../NavBar/Navbar";
+
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 const Search = () => {
   const [url, setUrl] = useState("");
   const [b64url, setB64Url] = useState("");
@@ -67,25 +70,27 @@ const Search = () => {
     if (result === false) {
       return (
         <h1 className="header-search">
-          URL is Safe by running ML{String(result)}{" "}
+          URL is Safe by running ML{" "}
         </h1>
       );
     } else if (result === true) {
-      return <h1 className="header-search">URL is Malicious </h1>;
+      return <h1 className="header-search">URL is Malicious by running ML </h1>;
     }
   };
 
   const renderComponent = (result) => {
     if (result === false) {
-      return <h1 className="header-search">URL is Safe {String(result)} </h1>;
+      return <h1 className="header-search">URL is Safe </h1>;
     } else if (result === true) {
       return <h1 className="header-search">URL is Malicious </h1>;
     }
   };
 
   const emptyURL = () => {
+    if (url == "") {
     return <h1 className="header-search">Please add URL in the text box </h1>;
   }
+}
 
   useEffect(() => {
     console.log(String(result));
@@ -93,6 +98,7 @@ const Search = () => {
 
   return (
     <div className="search-page">
+      <Navbar />
       <h1 className="header-search">Check URL</h1>
       <div className="search-box">
         <input

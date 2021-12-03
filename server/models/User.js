@@ -15,10 +15,16 @@ const UserProfileSchema = new mongoose.Schema(
         password:{
             type: String
         },
+        contact:{
+            type: String
+        },
+        zipCode:{
+            type: String
+        },
         address:{
             type: String
         },
-        dateOfBirth:{
+        city:{
             type: String
         },
         urls:{

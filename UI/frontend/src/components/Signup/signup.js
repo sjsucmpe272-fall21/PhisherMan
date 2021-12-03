@@ -91,17 +91,17 @@ class Signup extends Component {
             lastName: this.state.lastName,
             email: this.state.email,
             password: this.state.password,
-            deliveryType: this.state.deliveryType,
+            
             contact: this.state.contact,
             zipCode: this.state.zipCode,
             streetAddress: this.state.streetAddress,
             city: this.state.city,
-            country: this.state.country
+            
         }
 
         console.log("before signup");
         //make a post request with the user data
-        axios.post(`http://localhost:3001/signup`, data)
+        axios.post(`http://localhost:5000/api/v1/users`, data)
             .then(response => {
 
                 console.log("Status Code : ", response.status);

@@ -56,7 +56,7 @@ exports.addUser = async (req, res, next) => {
 exports.deleteUser = async (req, res, next) => {
     try {
       const user = await User.findById(req.params.id);
-  
+      
       if (!user) {
         return res.status(404).json({
           success: false,
@@ -77,3 +77,29 @@ exports.deleteUser = async (req, res, next) => {
       });
     }
   };
+
+
+// @desc    Login Users
+// @route   GET /api/v1/users/login/
+// @access  Public
+exports.loginUser = async (req, res, next) => {
+  try {
+    const users = await User.find({email: req.body.email, password:req.body.password } );
+if (users.length > 0){
+    return res.status(200).json({
+      success: true,
+      count: users.length,
+      data: users,
+    })} else {
+      return res.status(500).json({
+        success: true,
+        count: users.length,
+        data: "No user id and password with this combination",
+    })
+  }} catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: "Server Error",
+    });
+  }
+};

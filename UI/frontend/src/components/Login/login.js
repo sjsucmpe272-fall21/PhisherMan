@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 // import { constats } from './ip/config';
 
 
+
 //Define a Login Component
 class Login extends Component {
     constructor(props) {
@@ -53,11 +54,11 @@ class Login extends Component {
         axios.defaults.withCredentials = true;
 
         //make a post request with the user data
-        axios.post(`http://localhost:3001/login`, data)
+        axios.post(`http://localhost:5000/api/v1/users/login`, data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {
-                    <Redirect to="/home"></Redirect>
+                    return <Redirect to={'/signup'} />;
                 }
             })
             .catch(err => {
@@ -71,6 +72,7 @@ class Login extends Component {
     }
 
     render() {
+        
         return (
             <div>
                 <div className="container">
@@ -100,7 +102,7 @@ class Login extends Component {
                             <button onClick={this.submitLogin} className="btn btn-primary">Login</button>
                         </div>
                         <br />
-                        <Link to="/login">Signup here</Link>
+                        <Link to="/signup">Signup here</Link>
                     </div>
                 </div>
             </div>
