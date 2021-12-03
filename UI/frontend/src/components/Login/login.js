@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-// import './App.css';
 import axios from 'axios';
 // import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
-import { Link } from 'react-router-dom';
-// import { constats } from './ip/config';
-
+import { Link, Navigate, Switch, Route } from 'react-router-dom';
 
 //Define a Login Component
 class Login extends Component {
@@ -22,25 +19,19 @@ class Login extends Component {
         this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
         this.submitLogin = this.submitLogin.bind(this);
     }
-    // //Call the Will Mount to set the auth Flag to false
-    // componentWillMount() {
-    //     this.setState({
-    //         authFlag: false
-    //     })
-    // }
-    //username change handler to update state variable with the text entered by the user
+
     emailChangeHandler = (e) => {
         this.setState({
             username: e.target.value
         })
     }
-    //password change handler to update state variable with the text entered by the user
+
     passwordChangeHandler = (e) => {
         this.setState({
             password: e.target.value
         })
     }
-    //submit Login handler to send a request to the node backend
+
     submitLogin = (e) => {
 
         e.preventDefault();
@@ -57,7 +48,7 @@ class Login extends Component {
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {
-                    <Redirect to="/home"></Redirect>
+                    <Navigate to="/search" />
                 }
             })
             .catch(err => {
@@ -100,7 +91,7 @@ class Login extends Component {
                             <button onClick={this.submitLogin} className="btn btn-primary">Login</button>
                         </div>
                         <br />
-                        <Link to="/login">Signup here</Link>
+                        <Link to="/signup">Signup here</Link>
                     </div>
                 </div>
             </div>
