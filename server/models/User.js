@@ -1,31 +1,33 @@
 const mongoose = require('mongoose');
 const UserProfileSchema = new mongoose.Schema(
     {
-        email:{
-            type: String,
-            required: true,
-            unique: true
-        },
+        
         firstName:{
             type: String
         },
         lastName:{
             type: String
         },
+        email:{
+            type: String,
+            required: true,
+            unique: true
+        },
         password:{
             type: String
         },
-        address:{
+        contact:{
             type: String
         },
-        dateOfBirth:{
+        zipCode:{
             type: String
         },
-        urls:{
-            type: Object,
-            trim: true
+        streetAddress:{
+            type: String
         },
-
+        city:{
+            type: String
+        },
     }
 );
 
