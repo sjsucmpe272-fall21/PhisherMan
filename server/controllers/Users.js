@@ -1,3 +1,4 @@
+const Urls = require("../models/Urls");
 const User = require("../models/User");
 
 // @desc    Get all Users
@@ -101,5 +102,41 @@ if (users.length > 0){
       success: false,
       error: "Server Error",
     });
+  }
+};
+
+// @desc    Add Restaurant Menu
+// @route   POST /api/v1/restaurant/:id/menu
+// @access  Public
+exports.addUrl = async (req, res, next) => {
+  try {
+
+    
+    const user = await User.findById(req.params.id);
+    const url = await Urls.create(req.body);
+    const body = req.body
+    console.log({body});
+    const temp = await User.findByIdAndUpdate(req.params.id,{$push :{
+      url : body
+    }})
+
+    return res.status(201).json({
+      success: true,
+      data: user,
+    });
+  } catch (err) {
+    if (err.name === "ValidationError") {
+      const messages = Object.values(err.errors).map((val) => val.message);
+
+      return res.status(400).json({
+        success: false,
+        error: messages,
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        error: "Server Error",
+      });
+    }
   }
 };
