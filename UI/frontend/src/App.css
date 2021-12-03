@@ -1,16 +1,15 @@
-
 .search-page {
   text-align: center;
   margin: 0px;  
   min-height: 93vh;
-  background-color: #485461;
-background-image: linear-gradient(315deg, #485461 0%, #28313b 74%);
+  
+  background-color: var(--vt-grey-25);
 
 }
 
 .header-search {
   font-family: 'Montserrat', sans-serif;
-  color: #fff;
+  color: #6c6c6c;
 }
 .search-box {
   width: 350px;
@@ -62,4 +61,10 @@ background-image: linear-gradient(315deg, #485461 0%, #28313b 74%);
 .search-btn:focus {
   outline:none;
   color:black;
+}
+
+.extention{
+  font-size: .90em;
+    padding-top: 150px
+;
 }
