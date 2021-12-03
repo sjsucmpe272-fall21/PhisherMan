@@ -110,7 +110,7 @@ const Search = () => {
       {emptyURL()}
       {renderComponent(result)}
       {renderComponentML(resultML)}
-      <Extention ></Extention>
+      <Extention />
     </div>
   );
 };
