@@ -11,6 +11,7 @@ const Search = () => {
   const [b64url, setB64Url] = useState("");
   const [result, setResult] = useState(undefined);
   const [resultML, setResultML] = useState(undefined);
+  const [resultAge, setResultAge] = useState(undefined);
   const [resultBA, setResultBA] = useState(undefined);
   const getStatus = async () => {
     if (url == "") {
@@ -43,6 +44,7 @@ const Search = () => {
       });
     }
 
+    setResultAge(!!(await Heuristics.checkAge(url))["tooYoung"]);
     setResultBA(!!Heuristics.checkForBasicAuth(url)["basicAuth"]);
   };
 
@@ -92,6 +94,18 @@ const Search = () => {
       return (
             <li className="header-search">
                 <span class="text-danger">URL is a known phishing site</span>
+            </li>
+        );
+    }
+  };
+
+  const renderComponentAge = (result) => {
+    if (result === false) {
+      return <li className="header-search">URL domain was not registered recently</li>;
+    } else if (result === true) {
+      return (
+            <li className="header-search">
+                <span class="text-danger">URL domain was registered recently</span>
             </li>
         );
     }
@@ -153,6 +167,7 @@ const Search = () => {
           <ul>
               {renderComponent(result)}
               {renderComponentML(resultML)}
+              {renderComponentAge(resultAge)}
               {renderComponentBA(resultBA)}
           </ul>
       </div>
