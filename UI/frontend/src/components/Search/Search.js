@@ -4,20 +4,22 @@ import "../../App.css";
 import axios from "axios";
 import Extension from "./Extension";
 import Navbar from "../NavBar/Navbar";
+import Heuristics from "./heuristics";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 const Search = () => {
   const [url, setUrl] = useState("");
   const [b64url, setB64Url] = useState("");
-  const [result, setResult] = useState("");
-  const [resultML, setResultML] = useState("");
+  const [result, setResult] = useState(undefined);
+  const [resultML, setResultML] = useState(undefined);
+  const [resultBA, setResultBA] = useState(undefined);
   const getStatus = async () => {
     if (url == "") {
       emptyURL()
     }
     else{
     console.log(url);
-    const safe =  base64url(url);
+    const safe = base64url(url);
      //setB64Url(safe);
     await axios
       .get(
@@ -41,6 +43,8 @@ const Search = () => {
         setResultML(res.data.malicious);
       });
     }
+
+    setResultBA(!!Heuristics.checkForBasicAuth(url)["basicAuth"]);
   };
 
   const config = {
@@ -69,22 +73,42 @@ const Search = () => {
   const renderComponentML = (result) => {
     if (result === false) {
       return (
-        <h1 className="header-search">
-          URL is Safe by running ML{" "}
-        </h1>
+        <li className="header-search">
+          URL deemed safe by AI
+        </li>
       );
     } else if (result === true) {
-      return <h1 className="header-search">URL is Malicious by running ML </h1>;
+      return (
+          <li className="header-search">
+            <span class="text-danger">URL classified as phishing by AI</span>
+          </li>
+      );
     }
   };
 
   const renderComponent = (result) => {
     if (result === false) {
-      return <h1 className="header-search">URL is Safe </h1>;
+      return <li className="header-search">URL is not a known phishing site</li>;
     } else if (result === true) {
-      return <h1 className="header-search">URL is Malicious </h1>;
+      return (
+            <li className="header-search">
+                <span class="text-danger">URL is a known phishing site</span>
+            </li>
+        );
     }
   };
+
+  const renderComponentBA = (result) => {
+      if (result === false) {
+          return <li className="header-search">URL does not use basic authentication</li>;
+      } else if (result === true) {
+          return (
+              <li className="header-search">
+                <span class="text-warning">URL uses basic authentication</span>
+              </li>
+          );
+      }
+  }
 
   const emptyURL = () => {
     if (url == "") {
@@ -99,7 +123,8 @@ const Search = () => {
   return (
     <div className="search-page">
       <Navbar />
-      <h1 className="header-search">Check URL</h1>
+      <h1 className="header-search">Phisherman</h1>
+      <div>Check a URL for phishing</div>
       <div className="search-box">
         <input
           onChange={(e) => {
@@ -107,15 +132,31 @@ const Search = () => {
           }}
           className="search-input"
           type="text"
-          placeholder="Search something.."
+          placeholder="Enter a URL…"
         />
         <button className="search-btn" onClick={getStatus}>
           <i className="fas fa-search"></i>
         </button>
       </div>
-      {emptyURL()}
-      {renderComponent(result)}
-      {renderComponentML(resultML)}
+      <h2 class={result||resultML ? "text-danger" : "text-success"}>
+        {
+            () => {
+                if (result===undefined || resultML===undefined) {
+                    return;
+                }
+                return result||resultML ?
+                    "Phishing detected" :
+                    "No phishing detected"
+            }
+        }
+      </h2>
+      <div class="text-center">
+          <ul>
+              {renderComponent(result)}
+              {renderComponentML(resultML)}
+              {renderComponentBA(resultBA)}
+          </ul>
+      </div>
       <Extension />
     </div>
   );
