@@ -1,0 +1,45 @@
+.navbar {
+    width: 100vw;
+    font-weight: bold;
+    background-color: #192024;
+}
+ .nl {
+      margin: 0;
+      list-style-type: none;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 1em 0;}
+  
+      .nli:first-child {
+        margin-right: auto;
+        margin-left: 3em;
+      }
+  
+      .nli a {
+        color: #6c6c6c;;
+        text-decoration: none;
+        padding-right: 5em;
+        position: relative;
+          transition: all ease-in-out 550ms;
+      }
+  
+      .nli a::after {
+        content: "";
+        position: absolute;
+        display: block;
+        height: 0.4em;
+        width: 0%;
+        background-color: #6c6c6c;;
+        bottom: -1em;
+        transition: all ease-in-out 250ms;
+      }
+  
+      .nli a:hover::after {
+        width:60%;
+      }
+      
+      .nli a:hover{
+        color:black;
+      }
+    
