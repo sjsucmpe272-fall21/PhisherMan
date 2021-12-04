@@ -30,7 +30,7 @@ try:
         stream=True,
     ) as res:
         res.raise_for_status()
-        with open(f"volume/phishtank-{int(time())}.json", 'wb') as fp:
+        with open(f"/home/volume/phishtank-{int(time())}.json", 'wb') as fp:
             for chunk in res.iter_content(chunk_size=8192):
                 phishtank_json_bytes += chunk
                 fp.write(chunk)
