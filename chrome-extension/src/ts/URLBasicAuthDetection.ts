@@ -36,4 +36,8 @@ export default class URLBasicAuthDetection extends aDetection {
     public async detectAndGetResult(url: string): Promise<BasicAuthCheckResult> {
         return Heuristics.checkForBasicAuth(url);
     }
+
+    public getDescription() {
+        return "URL uses Basic Authentication";
+    }
 }

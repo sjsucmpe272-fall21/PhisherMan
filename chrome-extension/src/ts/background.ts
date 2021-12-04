@@ -1,7 +1,9 @@
 
 import Constants from "./Constants";
-import URLBlackListDetection from "./URLBlackListDetection";
+import URLBlackListDetection from "./URLBlacklistDetection";
 import URLMLDetection from "./URLMLDetection";
+import URLYoungAgeDetection from "./URLYoungAgeDetection";
+import URLBasicAuthDetection from "./URLBasicAuthDetection";
 import StorageListener from "./StorageListener";
 import { updateBadgeFromDetection } from "./updateBadgeFromDetection";
 
@@ -67,6 +69,10 @@ chrome.webRequest.onBeforeRequest.addListener(
 
             let urlBlacklistDetection = URLBlackListDetection.getInstance();
             let urlMLDetection = URLMLDetection.getInstance();
+
+            let urlHeuristicAge = URLYoungAgeDetection.getInstance();
+            let urlHeuristic = URLBasicAuthDetection.getInstance();
+
             chrome.action.setBadgeText({ text: "" });
             chrome.action.setBadgeBackgroundColor({ color: "#555555" });
             var resultObj: object|string;

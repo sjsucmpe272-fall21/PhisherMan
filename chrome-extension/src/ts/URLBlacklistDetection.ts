@@ -34,4 +34,8 @@ export default class URLBlackListDetection extends aDetection {
         );
         return res;
     }
+
+    public getDescription() {
+        return "URL found in blacklist";
+    }
 }

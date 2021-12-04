@@ -31,4 +31,7 @@ export default abstract class aDetection {
     public setPath(path: string) {
         this.path = path;
     }
+    public getDescription(): string {
+        return "abstract"
+    }
 }

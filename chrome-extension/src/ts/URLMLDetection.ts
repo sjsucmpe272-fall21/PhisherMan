@@ -34,4 +34,8 @@ export default class URLMLDetection extends aDetection {
         );
         return res;
     }
+
+    public getDescription() {
+        return "URL classified by AI";
+    }
 }

@@ -34,4 +34,7 @@ export default class URLYoungAgeDetection extends aDetection {
         return Heuristics.checkAge(url);
     }
 
+    public getDescription() {
+        return "URL registered recently";
+    }
 }
