@@ -13,6 +13,7 @@ const Search = () => {
   const [resultML, setResultML] = useState(undefined);
   const [resultAge, setResultAge] = useState(undefined);
   const [resultBA, setResultBA] = useState(undefined);
+  const [confidence, setConfidence] = useState(null);
   const getStatus = async () => {
     if (url == "") {
       emptyURL()
@@ -41,6 +42,7 @@ const Search = () => {
       .then((res) => {
         console.log(res.data);
         setResultML(res.data.malicious);
+        setConfidence(res.data.confidence);
       });
     }
 
@@ -71,17 +73,17 @@ const Search = () => {
   //     });
   // };
 
-  const renderComponentML = (result) => {
+  const renderComponentML = (result, confidence) => {
     if (result === false) {
       return (
         <li className="header-search">
-          URL deemed safe by AI
+          URL deemed safe by AI ({Math.round(confidence)}% phishing)
         </li>
       );
     } else if (result === true) {
       return (
           <li className="header-search">
-            <span class="text-danger">URL classified as phishing by AI</span>
+            <span class="text-danger">URL classified as phishing by AI ({Math.round(confidence)}% phishing)</span>
           </li>
       );
     }
@@ -166,7 +168,7 @@ const Search = () => {
       <div class="text-center">
           <ul>
               {renderComponent(result)}
-              {renderComponentML(resultML)}
+              {renderComponentML(resultML, confidence)}
               {renderComponentAge(resultAge)}
               {renderComponentBA(resultBA)}
           </ul>
