@@ -5,3 +5,5 @@ chrome-extension/dist/*
 target/
 *.sqlite
 .project
+
+UI/
