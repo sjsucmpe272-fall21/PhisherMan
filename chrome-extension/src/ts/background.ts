@@ -154,7 +154,10 @@ chrome.webRequest.onBeforeRequest.addListener(
     },
     {
         urls: ["<all_urls>"],
-        types: ["main_frame", "sub_frame"],
+        types: [
+            "main_frame",
+            // "sub_frame" // Should be enabled to capture iframes, but causes too many requests for now + false positives
+        ],
     },
     []
 );
