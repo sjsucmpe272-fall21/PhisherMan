@@ -106,7 +106,7 @@ function checkForBasicAuth(url) {
 //     console.log(res.tooYoung);
 // })();
 
-export {
-    checkAge,
-    checkForBasicAuth,
+export default {
+    checkAge: checkAge,
+    checkForBasicAuth: checkForBasicAuth,
 }
