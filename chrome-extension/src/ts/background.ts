@@ -67,28 +67,41 @@ chrome.webRequest.onBeforeRequest.addListener(
                 return;
             }
 
-            let urlBlacklistDetection = URLBlackListDetection.getInstance();
-            let urlMLDetection = URLMLDetection.getInstance();
-
-            let urlHeuristicAge = URLYoungAgeDetection.getInstance();
-            let urlHeuristic = URLBasicAuthDetection.getInstance();
+            // Initialize detection methods
+            const coreDetections = [
+                {
+                    method: URLBlackListDetection.getInstance(),
+                    trimParams: true,
+                },
+                {
+                    method: URLMLDetection.getInstance(),
+                    trimParams: false,
+                },
+            ];
+            const heuristicDetections = [
+                URLYoungAgeDetection.getInstance(),
+                URLBasicAuthDetection.getInstance(),
+            ];
 
             chrome.action.setBadgeText({ text: "" });
             chrome.action.setBadgeBackgroundColor({ color: "#555555" });
-            var resultObj: object|string;
+            var retObj: object|string;
             try {
-                let res: boolean = await urlBlacklistDetection.detect(activeURL);
-                var source = "blacklist";
-                // If blacklist didn't find phishing, call ml model
-                if (!res) {
-                    // Use full URL for ML model rather than URL with args stripped
-                    res = await urlMLDetection.detect(details.url);
-                    source = "ml";
+                var results: {description: string, result: boolean}[] = [];
+                var isPhishing: boolean = false;
+                for (let detectionMethod of coreDetections) {
+                    isPhishing = await detectionMethod.method.detect(
+                        detectionMethod.trimParams ? activeURL : details.url
+                    );
+                    results.push({
+                        description: detectionMethod.method.getDescription(),
+                        result: isPhishing,
+                    });
                 }
 
                 // Redirect if found phishing
                 console.log(settingsValues[Constants.KEY_REDIRECT_ENABLED]);
-                if (settingsValues[Constants.KEY_REDIRECT_ENABLED] && res) {
+                if (settingsValues[Constants.KEY_REDIRECT_ENABLED] && isPhishing) {
                     console.log("Redirecting...");
                     chrome.tabs.update(
                         details.tabId,
@@ -101,11 +114,11 @@ chrome.webRequest.onBeforeRequest.addListener(
                     );
                 }
 
-                updateBadgeFromDetection(res);
-                resultObj = {
+                updateBadgeFromDetection(isPhishing);
+                retObj = {
                     [Constants.KEY_LAST_DETECTION_RESULT]: {
-                        isPhishing: res,
-                        source: source,
+                        isPhishing: isPhishing,
+                        source: results,
                     },
                     [Constants.KEY_LAST_DETECTION_URL]: activeURL,
                 };
@@ -113,13 +126,13 @@ chrome.webRequest.onBeforeRequest.addListener(
             catch(err) {
                 console.error(err);
                 updateBadgeFromDetection(null);
-                resultObj = "error";
+                retObj = "error";
             }
-            chrome.storage.local.set({ [Constants.KEY_LAST_DETECTION]: resultObj }, () => {
+            chrome.storage.local.set({ [Constants.KEY_LAST_DETECTION]: retObj }, () => {
                 console.log('sending msg...');
                 chrome.runtime.sendMessage({
-                    result: resultObj,
-                    source: source,
+                    result: retObj,
+                    source: results,
                 });
             });
         });

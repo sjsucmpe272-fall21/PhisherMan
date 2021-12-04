@@ -27,6 +27,7 @@ class DialogHandler {
                 undefined,
                 DialogHandler.ID_VT_DIALOG,
                 `<button id="${btnId}" class="btn btn-sm bg-transparent border-0">${btnStr?btnStr:"Run a VirusTotal scan?"}</button>`,
+                "",
                 "text-muted",
                 "",
                 () => {
@@ -201,6 +202,7 @@ class DialogHandler {
         classification: boolean,
         id: string,
         dialogMessage?: string,
+        description?: string,
         customClass?: string,
         customIcon?: string,
         callback?: ()=>void,
