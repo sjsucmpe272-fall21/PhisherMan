@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Redirect } from 'react-router';
-import { Link, Routes } from 'react-router-dom';
+// import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 
 //Define a Login Component
 class Signup extends Component {
@@ -215,9 +215,9 @@ class Signup extends Component {
             </div>
             <br />
             <br />
-            <br/>
+            <br />
             <Link to="/login">Login here</Link>
-            
+
         </div>;
 
         return (<div className="container">
