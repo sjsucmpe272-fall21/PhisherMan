@@ -23,8 +23,14 @@ def detect(url):
     print(res.text)
     if res.status_code==200:
         ret = res.json()
-        return ret['predictions'][0]['malicious percentage']>50.0
-    return False
+        return {
+            'malicious': ret['predictions'][0]['malicious percentage']>70.0,
+            'confidence': ret['predictions'][0]['malicious percentage'],
+        }
+    return {
+        'malicious': False,
+        'confidence': -1,
+    }
 
 # ML model: 52.25.220.51
 
@@ -33,8 +39,10 @@ def lambda_handler(event, context):
         if 'httpMethod' in event:
             if event['httpMethod'] == 'GET':
                 base64url = event['pathParameters']['base64url']
+                res = detect(base64url)
                 return respond(None, {
-                    'malicious': detect(base64url),
+                    'malicious': res['malicious'],
+                    'confidence': res['confidence']
                 })
             else:
                 return respond(ValueError('Unsupported method "{}"'.format(event['httpMethod'])))
