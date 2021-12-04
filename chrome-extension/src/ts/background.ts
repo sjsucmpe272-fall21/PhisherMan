@@ -47,6 +47,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 
             // Prevent page's URL being sent several times by saving last sent URL
             let lastUrl = items[Constants.KEY_LAST_DETECTION][Constants.KEY_LAST_DETECTION_URL];
+            console.log(`${lastUrl} == ${activeURL}`);
             if (lastUrl == activeURL) {
                 console.log(`URL repeat (${activeURL}), skipping...`);
                 console.log(`REDIRECT_ENABLED: ${settingsValues[Constants.KEY_REDIRECT_ENABLED]}`);
@@ -128,6 +129,7 @@ chrome.webRequest.onBeforeRequest.addListener(
                     );
                 }
 
+                console.log(`storing ${activeURL}...`);
                 updateBadgeFromDetection(isPhishing);
                 retObj = {
                     [Constants.KEY_LAST_DETECTION_RESULT]: {
