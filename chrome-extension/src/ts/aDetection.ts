@@ -5,6 +5,7 @@ export default abstract class aDetection {
     private path: string;
 
     abstract async detect(val: any): Promise<boolean>;
+    abstract async detectAndGetResult(val: any): Promise<any>;
 
     async sendRequest(url: string, headers?: Record<string, string>): Promise<JSON> {
 
