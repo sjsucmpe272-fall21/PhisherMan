@@ -1,6 +1,14 @@
 
-const ICANN_ENDPOINT = "https://rdap.verisign.com/com/v1/domain/";
-const TOO_YOUNG_DAYS_THRESHOLD = 33;
+const ICANN_ENDPOINTS = (tld) => {
+    switch(tld.toLowerCase()) {
+        case ".com": return "https://rdap.verisign.com/com/v1/domain/";
+        case ".net": return "https://rdap.verisign.com/net/v1/domain/";
+        case ".org": return "https://rdap.publicinterestregistry.net/rdap/org/domain/";
+        case ".tv": return "https://tld-rdap.verisign.com/tv/v1/domain/";
+        default: throw `Unsupported tld: ${tld}`;
+    }
+}
+const TOO_YOUNG_DAYS_THRESHOLD = 60;
 
 // https://github.com/sindresorhus/is-ip
 // https://github.com/sindresorhus/ip-regex
@@ -31,13 +39,12 @@ const getDomainFromURL = (url) => {
 
 async function checkAge(url) {
     try {
-        if (isIP((new URL(url)).hostname)) {
+        if (isIp((new URL(url)).hostname)) {
             throw "Not a domain name";
         }
         var domain = getDomainFromURL(url);
-        console.log(domain);
         const res = await fetch(
-            ICANN_ENDPOINT+domain,
+            ICANN_ENDPOINTS(domain.match(/(\.\w+)$/)[1])+domain,
             {
                 method: "GET",
                 mode: "cors",

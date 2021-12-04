@@ -276,6 +276,9 @@ window.onload = () => {
         dialogHandler.setActiveUrl(items[Constants.KEY_LAST_DETECTION][Constants.KEY_LAST_DETECTION_URL]);
         let lastResult = items[Constants.KEY_LAST_DETECTION][Constants.KEY_LAST_DETECTION_RESULT];
         let result = lastResult.isPhishing;
+        if (!result && lastResult.isSuspicious) {
+            result = undefined; // undefined is treated as suspicious
+        }
         let description = lastResult.description;
         var dialogMessage: string;
         switch(result) {
@@ -287,7 +290,7 @@ window.onload = () => {
         }
         console.log(lastResult.description);
         dialogHandler.newDialog(
-            lastResult.isPhishing,
+            result,
             DialogHandler.ID_MAIN_DIALOG,
             dialogMessage,
             description.map(e=>{
@@ -303,6 +306,9 @@ window.onload = () => {
         console.log(request);
         let dialogHandler = DialogHandler.getDialogHandler();
         let result = request.result[Constants.KEY_LAST_DETECTION_RESULT].isPhishing;
+        if (!result && request.result[Constants.KEY_LAST_DETECTION_RESULT].isSuspicious) {
+            result = undefined; // undefined is treated as suspicious
+        }
         let description: {description: string, result: boolean}[] = request.result[Constants.KEY_LAST_DETECTION_RESULT].description;
         let dialogMessage: string;
         switch(result) {

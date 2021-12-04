@@ -9,7 +9,7 @@ export default class URLMLDetection extends aDetection {
     constructor() {
         super();
         this.setHost(Constants.DEFAULT_API_URL);
-        this.setPath(Constants.DEFAULT_URLBLACKLIST_API);
+        this.setPath(Constants.DEFAULT_URLML_API);
     }
 
     public static getInstance(): URLMLDetection {
@@ -19,7 +19,18 @@ export default class URLMLDetection extends aDetection {
         return URLMLDetection.instance;
     }
 
+    private endsWithTLD(url: string) {
+        console.log("testing tld for:" +url);
+        return /\.[a-zA-Z]+$/.test(
+            (new URL(url)).hostname
+        );
+    }
+
     async detect(url: string): Promise<boolean> {
+        if (!this.endsWithTLD(url)) {
+            console.log("Doesn't pass endsWithTLD() check. Skipping ML...");
+            return false;
+        }
         let res = await this.sendRequest(
             url,
             { ['X-Api-Key']: Constants.API_KEY },
@@ -28,6 +39,10 @@ export default class URLMLDetection extends aDetection {
     }
 
     public async detectAndGetResult(url: string): Promise<any> {
+        if (!this.endsWithTLD(url)) {
+            console.log("Doesn't pass endsWithTLD() check. Skipping ML...");
+            return null;
+        }
         let res = await this.sendRequest(
             url,
             { ['X-Api-Key']: Constants.API_KEY },

@@ -47,6 +47,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 
             // Prevent page's URL being sent several times by saving last sent URL
             let lastUrl = items[Constants.KEY_LAST_DETECTION][Constants.KEY_LAST_DETECTION_URL];
+            console.log(`${lastUrl} == ${activeURL}`);
             if (lastUrl == activeURL) {
                 console.log(`URL repeat (${activeURL}), skipping...`);
                 console.log(`REDIRECT_ENABLED: ${settingsValues[Constants.KEY_REDIRECT_ENABLED]}`);
@@ -89,30 +90,33 @@ chrome.webRequest.onBeforeRequest.addListener(
             try {
                 var results: {description: string, result: boolean}[] = [];
                 var isPhishing: boolean = false;
+                var isSuspicious: boolean = false;
 
                 // Core detections
                 for (let detectionMethod of coreDetections) {
-                    isPhishing = await detectionMethod.method.detect(
+                    let res = await detectionMethod.method.detect(
                         detectionMethod.trimParams ? activeURL : details.url
                     );
+                    isPhishing = isPhishing || res;
                     results.push({
                         description: detectionMethod.method.getDescription(),
-                        result: isPhishing,
+                        result: res,
                     });
                 }
 
                 // Heuristic detections
                 for (let detectionMethod of heuristicDetections) {
-                    isPhishing = await detectionMethod.detect(details.url);
+                    let res = await detectionMethod.detect(details.url);
+                    isSuspicious = isSuspicious || res;
                     results.push({
                         description: detectionMethod.getDescription(),
-                        result: isPhishing,
+                        result: res,
                     });
                 }
 
                 // Redirect if found phishing
                 console.log(settingsValues[Constants.KEY_REDIRECT_ENABLED]);
-                if (settingsValues[Constants.KEY_REDIRECT_ENABLED] && isPhishing) {
+                if (settingsValues[Constants.KEY_REDIRECT_ENABLED] && (isPhishing||isSuspicious)) {
                     console.log("Redirecting...");
                     chrome.tabs.update(
                         details.tabId,
@@ -125,10 +129,12 @@ chrome.webRequest.onBeforeRequest.addListener(
                     );
                 }
 
+                console.log(`storing ${activeURL}...`);
                 updateBadgeFromDetection(isPhishing);
                 retObj = {
                     [Constants.KEY_LAST_DETECTION_RESULT]: {
                         isPhishing: isPhishing,
+                        isSuspicious: isSuspicious,
                         description: results,
                     },
                     [Constants.KEY_LAST_DETECTION_URL]: activeURL,
@@ -150,7 +156,10 @@ chrome.webRequest.onBeforeRequest.addListener(
     },
     {
         urls: ["<all_urls>"],
-        types: ["main_frame", "sub_frame"],
+        types: [
+            "main_frame",
+            // "sub_frame" // Should be enabled to capture iframes, but causes too many requests for now + false positives
+        ],
     },
     []
 );
