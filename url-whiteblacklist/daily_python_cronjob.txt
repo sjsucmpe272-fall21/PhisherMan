@@ -1,1 +1,1 @@
-0 0 * * * python volume/phishtank_redis.py
+0 0 * * * python /home/volume/phishtank_redis.py
