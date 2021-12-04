@@ -19,9 +19,9 @@ npm run build
 3. Turn on "Developer Mode"
 4. Click "Load unpacked" and select directory `dist/`
 
-### Test server
+### Mock server (Not used)
 
-A test API server is in directory `test-api-server/`. Requires Node.js
+A Mock API server is in directory `test-api-server/`. Requires Node.js
 
 To run:
 1. Navigate to `test-api-server/`

@@ -5,7 +5,12 @@
     "manifest_version": 3,
     "permissions": [
         "tabs",
-        "storage"
+        "storage",
+        "webRequest"
+    ],
+    "host_permissions": [
+        "https://*.virustotal.com/*",
+        "<all_urls>"
     ],
     "background": {
         "service_worker": "background.js"
