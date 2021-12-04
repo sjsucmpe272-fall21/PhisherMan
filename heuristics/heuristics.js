@@ -82,7 +82,7 @@ function checkForBasicAuth(url) {
             basicAuth: username ? {
                 username: username,
                 isDomain: /\.\w+$/.test(username),
-            } : null,
+            } : false,
             dest: {
                 hostname: urlObj.hostname,
                 isIp: isIp(urlObj.hostname),
@@ -100,8 +100,13 @@ function checkForBasicAuth(url) {
     }
 }
 
-(async () => {
-    let res = await checkAge("https://www.amercaneisxpzizss.com/");
-    console.log(res.age.days);
-    console.log(res.tooYoung);
-})();
+// (async () => {
+//     let res = await checkAge("https://www.amercaneisxpzizss.com/");
+//     console.log(res.age.days);
+//     console.log(res.tooYoung);
+// })();
+
+export {
+    checkAge,
+    checkForBasicAuth,
+}
