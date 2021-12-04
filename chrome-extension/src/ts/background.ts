@@ -110,13 +110,13 @@ chrome.webRequest.onBeforeRequest.addListener(
                     isSuspicious = isSuspicious || res;
                     results.push({
                         description: detectionMethod.getDescription(),
-                        result: res ? undefined : false, // undefined means suspicious
+                        result: res,
                     });
                 }
 
                 // Redirect if found phishing
                 console.log(settingsValues[Constants.KEY_REDIRECT_ENABLED]);
-                if (settingsValues[Constants.KEY_REDIRECT_ENABLED] && isPhishing) {
+                if (settingsValues[Constants.KEY_REDIRECT_ENABLED] && (isPhishing||isSuspicious)) {
                     console.log("Redirecting...");
                     chrome.tabs.update(
                         details.tabId,

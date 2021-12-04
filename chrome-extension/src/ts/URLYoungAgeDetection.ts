@@ -27,9 +27,10 @@ export default class URLYoungAgeDetection extends aDetection {
     }
 
     async detect(url: string): Promise<boolean> {
-        let ret = !!Heuristics.checkAge(url)["tooYoung"];
-        console.log(`ageCheck: ${ret}`);
-        return ret;
+        let ret = await Heuristics.checkAge(url);
+        console.log("ageCheck");
+        console.log(ret);
+        return !!ret["tooYoung"];
     }
 
     public async detectAndGetResult(url: string): Promise<AgeCheckResult> {

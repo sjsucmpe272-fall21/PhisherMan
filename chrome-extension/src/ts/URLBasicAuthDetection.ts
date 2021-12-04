@@ -30,9 +30,10 @@ export default class URLBasicAuthDetection extends aDetection {
     }
 
     async detect(url: string): Promise<boolean> {
-        let ret = !!Heuristics.checkForBasicAuth(url)["basicAuth"];
-        console.log(`ageCheck: ${ret}`);
-        return ret;
+        let ret = Heuristics.checkForBasicAuth(url);
+        console.log("basicAuthCheck:");
+        console.log(ret);
+        return !!ret["basicAuth"];
     }
 
     public async detectAndGetResult(url: string): Promise<BasicAuthCheckResult> {
