@@ -31,6 +31,9 @@ const getDomainFromURL = (url) => {
 
 async function checkAge(url) {
     try {
+        if (isIP((new URL(url)).hostname)) {
+            throw "Not a domain name";
+        }
         var domain = getDomainFromURL(url);
         console.log(domain);
         const res = await fetch(
