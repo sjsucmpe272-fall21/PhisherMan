@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import base64url from "base64url";
 import "../../App.css";
 import axios from "axios";
 import Extension from "./Extension";
@@ -19,11 +18,11 @@ const Search = () => {
     }
     else{
     console.log(url);
-    const safe = base64url(url);
+    const safe = btoa(url);
      //setB64Url(safe);
     await axios
       .get(
-        `https://q7zcjspceh.execute-api.us-west-1.amazonaws.com/api/v1/detect/${safe}=`,
+        `https://q7zcjspceh.execute-api.us-west-1.amazonaws.com/api/v1/detect/${safe}`,
         config
       )
       .then((res) => {
