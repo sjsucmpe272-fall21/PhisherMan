@@ -9,6 +9,8 @@ import { updateBadgeFromDetection } from "./updateBadgeFromDetection";
 
 chrome.runtime.onInstalled.addListener(() => {
     chrome.storage.sync.set({
+        [Constants.KEY_ML_ENABLED]: true,
+        [Constants.KEY_BL_ENABLED]: true,
         [Constants.KEY_VT_ENABLED]: false,
         [Constants.KEY_VT_API_KEY]: undefined,
         [Constants.KEY_REDIRECT_ENABLED]: true,
@@ -36,6 +38,8 @@ chrome.webRequest.onBeforeRequest.addListener(
 
         const storageListener = StorageListener.getInstance();
         const settingsValues = {
+            [Constants.KEY_ML_ENABLED]: storageListener.getValue(Constants.KEY_ML_ENABLED),
+            [Constants.KEY_BL_ENABLED]: storageListener.getValue(Constants.KEY_BL_ENABLED),
             [Constants.KEY_REDIRECT_ENABLED]: storageListener.getValue(Constants.KEY_REDIRECT_ENABLED),
             [Constants.KEY_REDIRECT_CUSTOM_URL_ENABLED]: storageListener.getValue(Constants.KEY_REDIRECT_CUSTOM_URL_ENABLED),
             [Constants.KEY_REDIRECT_CUSTOM_URL]: storageListener.getValue(Constants.KEY_REDIRECT_CUSTOM_URL),
@@ -73,10 +77,12 @@ chrome.webRequest.onBeforeRequest.addListener(
                 {
                     method: URLBlackListDetection.getInstance(),
                     trimParams: true,
+                    enabled: settingsValues[Constants.KEY_BL_ENABLED],
                 },
                 {
                     method: URLMLDetection.getInstance(),
                     trimParams: false,
+                    enabled: settingsValues[Constants.KEY_ML_ENABLED],
                 },
             ];
             const heuristicDetections = [
@@ -94,6 +100,9 @@ chrome.webRequest.onBeforeRequest.addListener(
 
                 // Core detections
                 for (let detectionMethod of coreDetections) {
+                    if (!detectionMethod.enabled) {
+                        continue;
+                    }
                     let res = await detectionMethod.method.detect(
                         detectionMethod.trimParams ? activeURL : details.url
                     );
@@ -123,7 +132,7 @@ chrome.webRequest.onBeforeRequest.addListener(
                         {
                             url: settingsValues[Constants.KEY_REDIRECT_CUSTOM_URL_ENABLED] ?
                                     settingsValues[Constants.KEY_REDIRECT_CUSTOM_URL] :
-                                    chrome.runtime.getURL("phishing.html"),
+                                    chrome.runtime.getURL(isSuspicious ? "suspicious.html" : "phishing.html"),
                         },
                         ()=>{}
                     );

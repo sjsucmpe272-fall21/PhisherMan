@@ -8,6 +8,12 @@ class OptionsForm {
     public static getForm(): HTMLFormElement {
         return document.querySelector("#form-options");
     }
+    public static getMLCheckbox(): HTMLInputElement {
+        return document.querySelector("#check-ml");
+    }
+    public static getBLCheckbox(): HTMLInputElement {
+        return document.querySelector("#check-bl");
+    }
     public static getVTCheckbox(): HTMLInputElement {
         return document.querySelector("#check-vt");
     }
@@ -50,12 +56,16 @@ class OptionsForm {
 window.onload = () => {
 
     chrome.storage.sync.get([
+        Constants.KEY_ML_ENABLED,
+        Constants.KEY_BL_ENABLED,
         Constants.KEY_VT_ENABLED,
         Constants.KEY_VT_API_KEY,
         Constants.KEY_REDIRECT_ENABLED,
         Constants.KEY_REDIRECT_CUSTOM_URL_ENABLED,
         Constants.KEY_REDIRECT_CUSTOM_URL,
     ], (res) => {
+        OptionsForm.getMLCheckbox().checked = res[Constants.KEY_ML_ENABLED];
+        OptionsForm.getBLCheckbox().checked = res[Constants.KEY_BL_ENABLED];
         OptionsForm.getVTCheckbox().checked = res[Constants.KEY_VT_ENABLED];
         OptionsForm.getRedirectCheckbox().checked = res[Constants.KEY_REDIRECT_ENABLED];
         OptionsForm.getCustomRedirectURLCheckbox().checked = res[Constants.KEY_REDIRECT_CUSTOM_URL_ENABLED];
@@ -81,6 +91,8 @@ window.onload = () => {
         e.preventDefault();
 
         var config = {
+            [Constants.KEY_ML_ENABLED]: OptionsForm.getMLCheckbox().checked,
+            [Constants.KEY_BL_ENABLED]: OptionsForm.getBLCheckbox().checked,
             [Constants.KEY_VT_ENABLED]: OptionsForm.getVTCheckbox().checked,
             [Constants.KEY_REDIRECT_ENABLED]: OptionsForm.getRedirectCheckbox().checked,
             [Constants.KEY_REDIRECT_CUSTOM_URL_ENABLED]: OptionsForm.getCustomRedirectURLCheckbox().checked,

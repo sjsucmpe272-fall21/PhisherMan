@@ -11,6 +11,8 @@ export default class Constants {
     public static DEFAULT_URLML_API = "/api/v2/detect/url/ml/";
     public static API_KEY = "ZJLagjCjLC8jSOCRKP2OS5Nm7bSiMeYc1Lw1bl4o";
 
+    public static KEY_ML_ENABLED = "ML_ENABLED";
+    public static KEY_BL_ENABLED = "BL_ENABLED";
     public static KEY_VT_ENABLED = "VT_ENABLED";
     public static KEY_VT_API_KEY = "VT_API_KEY";
     public static KEY_REDIRECT_ENABLED = "REDIRECT_ENABLED";

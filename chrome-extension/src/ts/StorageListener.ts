@@ -5,6 +5,8 @@ export default class StorageListener {
 
     private static instance: StorageListener;
     private static values: Record<string,boolean|string> = {
+        [Constants.KEY_ML_ENABLED]: undefined,
+        [Constants.KEY_BL_ENABLED]: undefined,
         [Constants.KEY_VT_ENABLED]: undefined,
         [Constants.KEY_VT_API_KEY]: undefined,
         [Constants.KEY_REDIRECT_ENABLED]: undefined,
@@ -14,6 +16,8 @@ export default class StorageListener {
 
     private constructor() {
         chrome.storage.sync.get([
+            Constants.KEY_ML_ENABLED,
+            Constants.KEY_BL_ENABLED,
             Constants.KEY_VT_ENABLED,
             Constants.KEY_VT_API_KEY,
             Constants.KEY_REDIRECT_ENABLED,
