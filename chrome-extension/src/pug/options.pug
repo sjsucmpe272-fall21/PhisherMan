@@ -9,6 +9,12 @@ block header
 block main
     form#form-options
         div.form-check
+            input#check-ml.form-check-input(type="checkbox")
+            label.form-check-label(for="check-ml") Enable machine learning URL scan
+        div.form-check
+            input#check-bl.form-check-input(type="checkbox")
+            label.form-check-label(for="check-bl") Enable blacklist URL check
+        div.form-check
             input#check-vt.form-check-input(type="checkbox")
             label.form-check-label(for="check-vt") Enable VirusTotal URL scan
         div#text-vt-group.form-group.subitem.d-none
