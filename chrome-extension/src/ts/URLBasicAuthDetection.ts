@@ -1,7 +1,6 @@
 
 import Heuristics from "./heuristics";
 import aDetection from "./aDetection";
-import Constants from "./Constants";
 
 type BasicAuthCheckResult = {
     basicAuth: {
@@ -21,8 +20,6 @@ export default class URLBasicAuthDetection extends aDetection {
 
     constructor() {
         super();
-        this.setHost(Constants.DEFAULT_API_URL);
-        this.setPath(Constants.DEFAULT_URLBLACKLIST_API);
     }
 
     public static getInstance(): URLBasicAuthDetection {

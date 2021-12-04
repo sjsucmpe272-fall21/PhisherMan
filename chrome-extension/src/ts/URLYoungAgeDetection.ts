@@ -1,7 +1,6 @@
 
 import Heuristics from "./heuristics";
 import aDetection from "./aDetection";
-import Constants from "./Constants";
 
 type AgeCheckResult = {
     age: {
@@ -18,8 +17,6 @@ export default class URLYoungAgeDetection extends aDetection {
 
     constructor() {
         super();
-        this.setHost(Constants.DEFAULT_API_URL);
-        this.setPath(Constants.DEFAULT_URLBLACKLIST_API);
     }
 
     public static getInstance(): URLYoungAgeDetection {
