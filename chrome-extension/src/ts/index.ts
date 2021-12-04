@@ -27,7 +27,7 @@ class DialogHandler {
                 undefined,
                 DialogHandler.ID_VT_DIALOG,
                 `<button id="${btnId}" class="btn btn-sm bg-transparent border-0">${btnStr?btnStr:"Run a VirusTotal scan?"}</button>`,
-                "",
+                [],
                 "text-muted",
                 "",
                 () => {
@@ -202,7 +202,7 @@ class DialogHandler {
         classification: boolean,
         id: string,
         dialogMessage?: string,
-        description?: string,
+        description?: string[],
         customClass?: string,
         customIcon?: string,
         callback?: ()=>void,
@@ -240,6 +240,19 @@ class DialogHandler {
         dialogElem.classList.add(dialogClass);
         dialogElem.innerHTML += dialogIcon + `<span> ${dialogMessage}</span>`;
 
+        if (description) {
+            let descriptionListElem = document.createElement("ul");
+            descriptionListElem.classList.add("text-body");
+            descriptionListElem.classList.add("text-start");
+            descriptionListElem.classList.add("lh-1");
+            for (let desc of description) {
+                let elem = document.createElement("li");
+                elem.innerHTML = desc;
+                descriptionListElem.appendChild(elem);
+            }
+            dialogElem.appendChild(descriptionListElem);
+        }
+
         callback && callback();
     }
 }
@@ -262,9 +275,24 @@ window.onload = () => {
         let dialogHandler = DialogHandler.getDialogHandler();
         dialogHandler.setActiveUrl(items[Constants.KEY_LAST_DETECTION][Constants.KEY_LAST_DETECTION_URL]);
         let lastResult = items[Constants.KEY_LAST_DETECTION][Constants.KEY_LAST_DETECTION_RESULT];
+        let result = lastResult.isPhishing;
+        let description = lastResult.description;
+        var dialogMessage: string;
+        switch(result) {
+            case "error":
+                dialogMessage = "Error processing URL"
+                break;
+            default:
+                dialogMessage = dialogHandler.getMessageFromResult(result);
+        }
+        console.log(lastResult.description);
         dialogHandler.newDialog(
             lastResult.isPhishing,
             DialogHandler.ID_MAIN_DIALOG,
+            dialogMessage,
+            description.map(e=>{
+                return `<small class="${e.result ? "text-danger" : "text-muted"}">${e.description}</small>`;
+            }),
         );
         updateBadgeFromDetection(lastResult.isPhishing);
     });
@@ -274,20 +302,25 @@ window.onload = () => {
         console.log("Got msg");
         console.log(request);
         let dialogHandler = DialogHandler.getDialogHandler();
-        let dialogMessage: string;
         let result = request.result[Constants.KEY_LAST_DETECTION_RESULT].isPhishing;
+        let description: {description: string, result: boolean}[] = request.result[Constants.KEY_LAST_DETECTION_RESULT].description;
+        let dialogMessage: string;
         switch(result) {
             case "error":
-                dialogMessage = "Error processing URL"
+                dialogMessage = "Error processing URL";
                 break;
             default:
                 dialogMessage = dialogHandler.getMessageFromResult(result);
         }
+        console.log(request.description);
         dialogHandler.setActiveUrl(request.result[Constants.KEY_LAST_DETECTION_URL]);
         dialogHandler.newDialog(
             result,
             DialogHandler.ID_MAIN_DIALOG,
             dialogMessage,
+            description.map(e=>{
+                return `<small class="${e.result ? "text-danger" : "text-muted"}">${e.description}</small>`;
+            }),
         );
     });
 };
