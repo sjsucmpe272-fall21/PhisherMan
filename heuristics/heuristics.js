@@ -8,7 +8,7 @@ const ICANN_ENDPOINTS = (tld) => {
         default: throw `Unsupported tld: ${tld}`;
     }
 }
-const TOO_YOUNG_DAYS_THRESHOLD = 33;
+const TOO_YOUNG_DAYS_THRESHOLD = 60;
 
 // https://github.com/sindresorhus/is-ip
 // https://github.com/sindresorhus/ip-regex
