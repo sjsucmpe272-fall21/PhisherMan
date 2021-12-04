@@ -12,12 +12,14 @@ class Login extends Component {
             username: "",
             password: "",
             authFlag: false,
-            message: ""
+            message: "",
+            search: false,
         }
         //Bind the handlers to this class
         this.emailChangeHandler = this.emailChangeHandler.bind(this);
         this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
         this.submitLogin = this.submitLogin.bind(this);
+
     }
 
     emailChangeHandler = (e) => {
@@ -48,7 +50,10 @@ class Login extends Component {
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {
-                    <Navigate to="/search" />
+
+                    this.setState({
+                        search: true
+                    })
                 }
             })
             .catch(err => {
@@ -62,8 +67,14 @@ class Login extends Component {
     }
 
     render() {
+
+        let redirect = null;
+         if (this.state.search) {
+           redirect = <Navigate to="/search" />
+        }
         return (
             <div>
+                {redirect}
                 <div className="container">
                     <div className="login-form">
                         <div className="main-div">
