@@ -9,7 +9,7 @@ export default class URLMLDetection extends aDetection {
     constructor() {
         super();
         this.setHost(Constants.DEFAULT_API_URL);
-        this.setPath(Constants.DEFAULT_URLBLACKLIST_API);
+        this.setPath(Constants.DEFAULT_URLML_API);
     }
 
     public static getInstance(): URLMLDetection {
