@@ -290,7 +290,7 @@ window.onload = () => {
         }
         console.log(lastResult.description);
         dialogHandler.newDialog(
-            lastResult.isPhishing,
+            result,
             DialogHandler.ID_MAIN_DIALOG,
             dialogMessage,
             description.map(e=>{
