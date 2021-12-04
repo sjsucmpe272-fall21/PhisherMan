@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import base64url from "base64url";
 import "../../App.css";
 import axios from "axios";
-import Extention from "./Extention";
+import Extension from "./Extension";
 import Navbar from "../NavBar/Navbar";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -116,7 +116,7 @@ const Search = () => {
       {emptyURL()}
       {renderComponent(result)}
       {renderComponentML(resultML)}
-      <Extention />
+      <Extension />
     </div>
   );
 };

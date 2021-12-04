@@ -19,7 +19,7 @@ const Navbar = () => {
       </li>
 
       <li className="nli">
-        <a href="https://phishermanextension.s3.us-west-1.amazonaws.com/phisherman-extension.zip">Extention</a>
+        <a href="https://phishermanextension.s3.us-west-1.amazonaws.com/phisherman-extension.zip">Extension</a>
       </li>
 
     </ul> </div>

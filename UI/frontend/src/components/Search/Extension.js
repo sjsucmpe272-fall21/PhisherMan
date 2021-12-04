@@ -1,18 +1,18 @@
 import React from "react";
 
 
-const Extention = () => {
+const Extension = () => {
   return (
-    <div className="extention">
+    <div className="extension">
         {/* <div class="tab-logo"> <img src={img} height="70" />  </div> */}
       Click{" "}
       <a href="https://phishermanextension.s3.us-west-1.amazonaws.com/phisherman-extension.zip">
         {" "}
         here{" "}
       </a>{" "}
-      to Dowload Phisherman Extention
+      to Download Phisherman Extension
     </div>
   );
 };
 
-export default Extention;
+export default Extension;
