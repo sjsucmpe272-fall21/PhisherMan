@@ -92,7 +92,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 
                 // Core detections
                 for (let detectionMethod of coreDetections) {
-                    isPhishing = await detectionMethod.method.detect(
+                    isPhishing = isPhishing || await detectionMethod.method.detect(
                         detectionMethod.trimParams ? activeURL : details.url
                     );
                     results.push({
@@ -103,7 +103,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 
                 // Heuristic detections
                 for (let detectionMethod of heuristicDetections) {
-                    isPhishing = await detectionMethod.detect(details.url);
+                    isPhishing = isPhishing || await detectionMethod.detect(details.url);
                     results.push({
                         description: detectionMethod.getDescription(),
                         result: isPhishing,
