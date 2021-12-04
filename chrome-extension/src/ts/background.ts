@@ -89,24 +89,27 @@ chrome.webRequest.onBeforeRequest.addListener(
             try {
                 var results: {description: string, result: boolean}[] = [];
                 var isPhishing: boolean = false;
+                var isSuspicious: boolean = false;
 
                 // Core detections
                 for (let detectionMethod of coreDetections) {
-                    isPhishing = isPhishing || await detectionMethod.method.detect(
+                    let res = await detectionMethod.method.detect(
                         detectionMethod.trimParams ? activeURL : details.url
                     );
+                    isPhishing = isPhishing || res;
                     results.push({
                         description: detectionMethod.method.getDescription(),
-                        result: isPhishing,
+                        result: res,
                     });
                 }
 
                 // Heuristic detections
                 for (let detectionMethod of heuristicDetections) {
-                    isPhishing = isPhishing || await detectionMethod.detect(details.url);
+                    let res = await detectionMethod.detect(details.url);
+                    isSuspicious = isSuspicious || res;
                     results.push({
                         description: detectionMethod.getDescription(),
-                        result: isPhishing,
+                        result: res ? undefined : false, // undefined means suspicious
                     });
                 }
 
@@ -129,6 +132,7 @@ chrome.webRequest.onBeforeRequest.addListener(
                 retObj = {
                     [Constants.KEY_LAST_DETECTION_RESULT]: {
                         isPhishing: isPhishing,
+                        isSuspicious: isSuspicious,
                         description: results,
                     },
                     [Constants.KEY_LAST_DETECTION_URL]: activeURL,
