@@ -26,4 +26,16 @@ export default class URLMLDetection extends aDetection {
         );
         return res["malicious"];
     }
+
+    public async detectAndGetResult(url: string): Promise<any> {
+        let res = await this.sendRequest(
+            url,
+            { ['X-Api-Key']: Constants.API_KEY },
+        );
+        return res;
+    }
+
+    public getDescription() {
+        return "URL classified by AI";
+    }
 }
