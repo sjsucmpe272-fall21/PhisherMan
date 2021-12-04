@@ -37,6 +37,6 @@ export default class URLYoungAgeDetection extends aDetection {
     }
 
     public getDescription() {
-        return "URL registered recently";
+        return "Domain registered recently";
     }
 }
