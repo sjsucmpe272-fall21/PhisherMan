@@ -53,6 +53,24 @@ async function checkAge(url) {
     }
 }
 
+function checkForIPObfuscation(url) {
+    try {
+        const url = new URL(url);
+
+        return {
+            obfuscated: true,
+            error: null,
+        }
+    }
+    catch (err) {
+        console.error(err);
+        return {
+            obfuscated: null,
+            error: err,
+        }
+    }
+}
+
 (async () => {
     let res = await checkAge("https://www.amercaneisxpzizss.com/");
     console.log(res.age.days);
