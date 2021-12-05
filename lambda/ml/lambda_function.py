@@ -1,5 +1,6 @@
 import json
 import requests
+import base64
 
 print('Loading function')
 
@@ -14,10 +15,11 @@ def respond(err, res=None):
     }
 
 def detect(url):
+    print(f"Testing '{base64.b64decode(url).decode('utf-8')}'")
     res = requests.post(
         'http://52.25.220.51/predict',
         data=json.dumps({
-            'url': url,
+            'url': base64.b64decode(url).decode('utf-8'),
         })
     )
     print(res.text)
@@ -26,13 +28,14 @@ def detect(url):
         return {
             'malicious': ret['predictions'][0]['malicious percentage']>70.0,
             'confidence': ret['predictions'][0]['malicious percentage'],
+            'spell_check': ret['predictions'][0]['spell_check'],
         }
+
     return {
         'malicious': False,
         'confidence': -1,
+        'spell_check': None,
     }
-
-# ML model: 52.25.220.51
 
 def lambda_handler(event, context):
     try:
@@ -42,7 +45,8 @@ def lambda_handler(event, context):
                 res = detect(base64url)
                 return respond(None, {
                     'malicious': res['malicious'],
-                    'confidence': res['confidence']
+                    'confidence': res['confidence'],
+                    'spell_check': res['spell_check'],
                 })
             else:
                 return respond(ValueError('Unsupported method "{}"'.format(event['httpMethod'])))
