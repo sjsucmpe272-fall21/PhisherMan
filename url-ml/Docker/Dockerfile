@@ -1,6 +1,7 @@
 # Specify your base image
 FROM python:3.7.3-stretch
 # create a work directory
+RUN apt-get -y update && apt-get install -y libenchant1c2a
 RUN mkdir /app
 # navigate to this work directory
 WORKDIR /app

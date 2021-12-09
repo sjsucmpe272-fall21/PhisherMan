@@ -6,11 +6,14 @@ import tensorflow as tf
 import pandas as pd
 from flask import Flask, request, jsonify, render_template
 import json
+import enchant
+from urllib.parse import urlparse
+
 
 # Initialize our Flask application and the Keras model.
 app = Flask(__name__)
 
-model_path = 'lstm.h5'
+model_path = 'lstm_v12.h5'
 model = load_model(model_path, compile = False)
 df = pd.read_csv('D3_data.csv', header=None)
 df.columns =['Index', 'Url', 'Result']
@@ -24,6 +27,34 @@ max_chars = 20000
 maxlen = 128
 tokenizer = Tokenizer(num_words=max_chars, char_level=True)
 tokenizer.fit_on_texts(samples)
+
+#Spell check
+topurl = enchant.request_pwl_dict("topdomains.txt")
+
+def spell_check(url):
+    x = []
+    #extract domain
+    dom = urlparse(url).netloc
+    #Remove Sub-Domain
+    remsub = '.'.join(dom.split('.')[1:])
+    # most important. end the sequence
+    if topurl.check(dom):
+        x = ['Verified Domain']
+        return x
+    elif topurl.check(remsub):
+        x = ['Verified Domain']
+        return x
+    
+    temp = topurl.suggest(dom)
+    temp2 = topurl.suggest(remsub)
+    
+    if len(temp2) == 0:
+        x = temp
+    elif len(temp2) > 1:
+        x = temp
+    else:
+        x = temp2
+    return x
 
 def get_data(url):
 
@@ -52,6 +83,8 @@ def predict():
         incoming = request.get_json(force=True)
         url = incoming["url"]
 
+        domcheck = spell_check(url)
+
 
         # Process and prepare the URL.
         url_prepped = get_data([url])
@@ -68,6 +101,7 @@ def predict():
         else:
             result = "URL is probably NOT malicious."
         
+        
         #split = url.split("//")
         #print(split[0])
         #split2 = split[1]
@@ -77,10 +111,10 @@ def predict():
         prediction = float(prediction)
         prediction = prediction * 100
         
-        #if result == "Base URLs cannot be accurately determined.":
-        #    r = {"result": result, "url": url}
-        #else:
-        r = {"result": result, "malicious percentage": prediction, "url": url}
+        if domcheck == []:
+            r = {"result": result, "malicious percentage": prediction, "url": url, 'spell_check': 'No match'}
+        else:
+        	r = {"result": result, "malicious percentage": prediction, "url": url, 'spell_check': domcheck[0]}
         data["predictions"].append(r)
 
         # Show that the request was a success.
